@@ -307,6 +307,8 @@ return /******/ (function(modules) { // webpackBootstrap
                 return s.charAt(s.length - 1);
               }
 
+              const weakSet = new WeakSet();
+
               class WebPangu {
                 constructor() {
                   this.blockTags = /^(div|p|h1|h2|h3|h4|h5|h6)$/i;
@@ -368,6 +370,11 @@ return /******/ (function(modules) { // webpackBootstrap
                   for (let i = textNodes.snapshotLength; --i >= 0;) {
                     const currentTextNode = textNodes.snapshotItem(i);
                     if (!(currentTextNode instanceof Text)) continue;
+                    if (weakSet.has(currentTextNode)) {
+                      nextTextNode = currentTextNode;
+                      continue;
+                    }
+                    weakSet.add(currentTextNode);
 
                     const textNodeParent = currentTextNode.parentNode;
                     if (this.isSpecificTag(textNodeParent, this.presentationalTags) && !this.isInsideSpecificTag(textNodeParent, this.ignoredTags)) {
