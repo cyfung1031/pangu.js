@@ -181,6 +181,14 @@ return /******/ (function(modules) { // webpackBootstrap
               const Q_ADD_SPACE_5 = new RegExp(`([${CJK}])([\\[])([${CJK2}]+)([\\]])([${CJK}])`, 'g')
               const Q_ADD_SPACE_6 = new RegExp(`([${CJK}])([\\{])([${CJK2}]+)([\\}])([${CJK}])`, 'g')
 
+
+              const Q_ADD_SPACE_1b = new RegExp(`([${CMB}])(['"])([${CJK2}]+)\\1([${CJK}])`, 'g')
+              const Q_ADD_SPACE_2b = new RegExp(`([${CMB}])([“])([${CJK2}]+)([”])([${CJK}])`, 'g')
+              const Q_ADD_SPACE_3b = new RegExp(`([${CMB}])([‘])([${CJK2}]+)([’])([${CJK}])`, 'g')
+              const Q_ADD_SPACE_4b = new RegExp(`([${CMB}])([(])([${CJK2}]+)([)])([${CJK}])`, 'g')
+              const Q_ADD_SPACE_5b = new RegExp(`([${CMB}])([\\[])([${CJK2}]+)([\\]])([${CJK}])`, 'g')
+              const Q_ADD_SPACE_6b = new RegExp(`([${CMB}])([\\{])([${CJK2}]+)([\\}])([${CJK}])`, 'g')
+
               const QA_ADD_SPACE = new RegExp(`([${CJK}])(['"“”‘’(){}\\[\\]])([^'"“”‘’(){}\\[\\]]+)(['"“”‘’(){}\\[\\]])([${CMB2}])`)
               const QA_ADD_SPACE_2 = new RegExp(`([${CJK}])(['"“”‘’(){}\\[\\]])([a-zA-Z0-9.,]+)(['"“”‘’(){}\\[\\]])([${CJK}])`)
 
@@ -301,6 +309,16 @@ return /******/ (function(modules) { // webpackBootstrap
                     let z = bracket(b, d);
                     return z ? `${a} ${b}${c}${d} ${e}` : _;
                   })
+
+
+                  newText = loopReplace(newText, Q_ADD_SPACE_1b, '$1$2$3$2 $4');
+                  newText = loopReplace(newText, Q_ADD_SPACE_2b, '$1$2$3$4 $5');
+                  newText = loopReplace(newText, Q_ADD_SPACE_3b, '$1$2$3$4 $5');
+                  newText = loopReplace(newText, Q_ADD_SPACE_4b, '$1$2$3$4 $5');
+                  newText = loopReplace(newText, Q_ADD_SPACE_5b, '$1$2$3$4 $5');
+                  newText = loopReplace(newText, Q_ADD_SPACE_6b, '$1$2$3$4 $5');
+
+
                 }
 
                 return newText;
