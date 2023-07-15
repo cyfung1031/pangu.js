@@ -171,13 +171,15 @@ return /******/ (function(modules) { // webpackBootstrap
               const M_COV_SYMBOL = new RegExp(`([${CJK}])([~!;:,?])([${CJK}])`, 'g')
               const S_ADD_SPACE_2 = new RegExp(`([a-zA-Z0-9]+)([~!;:,?])([${CJK}])`, 'g')
 
+              const CJK2 = `${CJK}\d,.`;
+
               const A_ADD_SPACE = new RegExp(`([${CJK}])([!#$%&\\x2A-\\x5A\\x5E\\x5F\\x61-\\x7A~\\x80-\\xFF]+)\\x20([${CJK}])`, 'g')
-              const Q_ADD_SPACE = new RegExp(`([${CJK}])(['"])([${CJK}]+)\\1([${CJK}])`, 'g')
-              const Q_ADD_SPACE_2 = new RegExp(`([${CJK}])([“])([${CJK}]+)([”])([${CJK}])`, 'g')
-              const Q_ADD_SPACE_3 = new RegExp(`([${CJK}])([‘])([${CJK}]+)([’])([${CJK}])`, 'g')
-              const Q_ADD_SPACE_4 = new RegExp(`([${CJK}])([(])([${CJK}]+)([)])([${CJK}])`, 'g')
-              const Q_ADD_SPACE_5 = new RegExp(`([${CJK}])([\\[])([${CJK}]+)([\\]])([${CJK}])`, 'g')
-              const Q_ADD_SPACE_6 = new RegExp(`([${CJK}])([\\{])([${CJK}]+)([\\}])([${CJK}])`, 'g')
+              const Q_ADD_SPACE = new RegExp(`([${CJK}])(['"])([${CJK2}]+)\\1([${CJK}])`, 'g')
+              const Q_ADD_SPACE_2 = new RegExp(`([${CJK}])([“])([${CJK2}]+)([”])([${CJK}])`, 'g')
+              const Q_ADD_SPACE_3 = new RegExp(`([${CJK}])([‘])([${CJK2}]+)([’])([${CJK}])`, 'g')
+              const Q_ADD_SPACE_4 = new RegExp(`([${CJK}])([(])([${CJK2}]+)([)])([${CJK}])`, 'g')
+              const Q_ADD_SPACE_5 = new RegExp(`([${CJK}])([\\[])([${CJK2}]+)([\\]])([${CJK}])`, 'g')
+              const Q_ADD_SPACE_6 = new RegExp(`([${CJK}])([\\{])([${CJK2}]+)([\\}])([${CJK}])`, 'g')
 
               const QA_ADD_SPACE = new RegExp(`([${CJK}])(['"“”‘’(){}\\[\\]])([^'"“”‘’(){}\\[\\]]+)(['"“”‘’(){}\\[\\]])([${CMB2}])`)
               const QA_ADD_SPACE_2 = new RegExp(`([${CJK}])(['"“”‘’(){}\\[\\]])([a-zA-Z0-9.,]+)(['"“”‘’(){}\\[\\]])([${CJK}])`)
