@@ -183,7 +183,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
               const QA_ADD_SPACE = new RegExp(`([${CJK}])(['"“”‘’(){}\\[\\]])([^'"“”‘’(){}\\[\\]]+)(['"“”‘’(){}\\[\\]])([${CMB2}])`)
               const QA_ADD_SPACE_2 = new RegExp(`([${CJK}])(['"“”‘’(){}\\[\\]])([a-zA-Z0-9.,]+)(['"“”‘’(){}\\[\\]])([${CJK}])`)
-              
+
 
               function loopReplace(text, search, replacement) {
                 let maxN = Math.round(text.length / 2) + 4;
@@ -216,6 +216,11 @@ return /******/ (function(modules) { // webpackBootstrap
                 return z;
               }
 
+              /**
+               * 
+               * @param {string} text 
+               * @returns {string}
+               */
               function replacer(text) {
 
                 // let self = this;
@@ -373,6 +378,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
                   const document = contextNode.ownerDocument || contextNode;
 
+                  if (!(document instanceof Document)) {
+                    return;
+                  }
+
                   const textNodes = document.evaluate(xPathQuery, contextNode, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null);
                   let nextTextNode;
 
@@ -385,38 +394,27 @@ return /******/ (function(modules) { // webpackBootstrap
                       continue;
                     }
                     weakSet.add(currentTextNode);
-                    if (!anyPossibleCJK(currentTextNode.data)) {
+                    const currentTextNodeData = currentTextNode.data;
+                    if (!anyPossibleCJK(currentTextNodeData)) {
                       continue;
                     }
 
                     const textNodeParent = currentTextNode.parentNode;
                     if (this.isSpecificTag(textNodeParent, this.presentationalTags) && !this.isInsideSpecificTag(textNodeParent, this.ignoredTags)) {
 
-                      let elementNode = textNodeParent;
-                      const previousSibling = elementNode.previousSibling;
-                      if (previousSibling) {
-
-                        if (previousSibling.nodeType === Node.TEXT_NODE) {
-                          let testText = lastChar(previousSibling.data) + firstChar(currentTextNode.data);
-                          let testNewText = this.spacing(testText);
-
-                          if (testText !== testNewText) {
-                            previousSibling.data = "" + previousSibling.data + " ";
-                          }
+                      const previousSibling = textNodeParent.previousSibling;
+                      if (previousSibling instanceof Text) {
+                        const testRes = this.spacing(lastChar(previousSibling.data) + firstChar(currentTextNodeData));
+                        if (testRes !== null) {
+                          previousSibling.data = "" + previousSibling.data + " ";
                         }
                       }
 
-                      const nextSibling = elementNode.nextSibling;
-                      if (nextSibling) {
-
-                        if (nextSibling.nodeType === Node.TEXT_NODE) {
-                          let _testText = lastChar(currentTextNode.data) + firstChar(nextSibling.data);
-
-                          let _testNewText = this.spacing(_testText);
-
-                          if (_testText !== _testNewText) {
-                            nextSibling.data = " " + nextSibling.data;
-                          }
+                      const nextSibling = textNodeParent.nextSibling;
+                      if (nextSibling instanceof Text) {
+                        const testRes = this.spacing(lastChar(currentTextNodeData) + firstChar(nextSibling.data));
+                        if (testRes !== null) {
+                          nextSibling.data = " " + nextSibling.data;
                         }
                       }
                     }
@@ -425,10 +423,10 @@ return /******/ (function(modules) { // webpackBootstrap
                       continue;
                     }
 
-                    const newText = this.spacing(currentTextNode.data);
+                    const currentTextNodeNewText = this.spacing(currentTextNodeData);
 
-                    if (currentTextNode.data !== newText) {
-                      currentTextNode.data = newText;
+                    if (currentTextNodeNewText !== null) {
+                      currentTextNode.data = currentTextNodeNewText;
                     }
 
                     if (sNextTextNode instanceof Text) {
@@ -436,11 +434,9 @@ return /******/ (function(modules) { // webpackBootstrap
                         continue;
                       }
 
-                      let _testText2 = lastChar(currentTextNode.data) + firstChar(sNextTextNode.data);
+                      const testRes = this.spacing(lastChar(currentTextNode.data) + firstChar(sNextTextNode.data));
 
-                      let _testNewText2 = this.spacing(_testText2);
-
-                      if (_testNewText2 !== _testText2) {
+                      if (testRes !== null) {
 
                         let currentNode = currentTextNode;
 
@@ -462,27 +458,23 @@ return /******/ (function(modules) { // webpackBootstrap
 
                           if (nextNode.nodeName.search(this.spaceSensitiveTags) === -1) {
                             if (nextNode.nodeName.search(this.ignoredTags) === -1 && nextNode.nodeName.search(this.blockTags) === -1) {
-                              if (sNextTextNode.previousSibling) {
-                                if (sNextTextNode.previousSibling.nodeName.search(this.spaceLikeTags) === -1) {
-                                  sNextTextNode.data = " " + sNextTextNode.data;
-                                }
-                              } else {
-                                if (!this.canIgnoreNode(sNextTextNode)) {
-                                  sNextTextNode.data = " " + sNextTextNode.data;
-                                }
+                              const b = sNextTextNode.previousSibling
+                                ? sNextTextNode.previousSibling.nodeName.search(this.spaceLikeTags) === -1
+                                : !this.canIgnoreNode(sNextTextNode);
+                              if (b) {
+                                sNextTextNode.data = " " + sNextTextNode.data;
                               }
                             }
                           } else if (currentNode.nodeName.search(this.spaceSensitiveTags) === -1) {
                             currentTextNode.data = "" + currentTextNode.data + " ";
                           } else {
                             const panguSpace = document.createElement('pangu');
-                            panguSpace.innerHTML = ' ';
+                            panguSpace.appendChild(document.createTextNode(' '));
 
-                            if ((nextNode.previousSibling instanceof Node) ? nextNode.previousSibling.nodeName.search(this.spaceLikeTags) === -1 : true) {
+                            const b = !(nextNode.previousSibling instanceof Node) || (nextNode.previousSibling.nodeName.search(this.spaceLikeTags) === -1);
+
+                            if (b && nextNode.previousElementSibling !== null) {
                               nextNode.parentNode.insertBefore(panguSpace, nextNode);
-                              if (panguSpace.previousElementSibling === null && panguSpace.parentNode) {
-                                panguSpace.parentNode.removeChild(panguSpace);
-                              }
                             }
 
                           }
@@ -510,14 +502,16 @@ return /******/ (function(modules) { // webpackBootstrap
                 spacing(text) {
                   if (typeof text !== 'string') {
                     console.warn("spacing(text) only accepts string but got " + _typeof(text));
-                    return text;
+                    return null;
                   }
 
                   if (text.length <= 1 || !ANY_CJK.test(text)) {
-                    return text;
+                    return null;
                   }
 
-                  return replacer(text);
+                  const nText = replacer(text);
+                  if (nText === text) return null;
+                  return nText;
                 }
 
               }
