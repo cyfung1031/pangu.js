@@ -309,9 +309,9 @@ return /******/ (function(modules) { // webpackBootstrap
                 return s.charAt(s.length - 1);
               }
 
-              function anyDualByte(s) {
+              function anyPossibleCJK(s) {
                 for (let i = 0, l = s.length; i < l; i++) {
-                  if (s[i] > '\xFF') return true;
+                  if (s[i] >= '\u2E80') return true;
                 }
                 return false;
               }
@@ -379,13 +379,13 @@ return /******/ (function(modules) { // webpackBootstrap
                   for (let i = textNodes.snapshotLength; --i >= 0;) {
                     const currentTextNode = textNodes.snapshotItem(i);
                     if (!(currentTextNode instanceof Text)) continue;
+                    const sNextTextNode = nextTextNode;
+                    nextTextNode = currentTextNode;
                     if (weakSet.has(currentTextNode)) {
-                      nextTextNode = currentTextNode;
                       continue;
                     }
                     weakSet.add(currentTextNode);
-                    if (!anyDualByte(currentTextNode.data)) {
-                      nextTextNode = currentTextNode;
+                    if (!anyPossibleCJK(currentTextNode.data)) {
                       continue;
                     }
 
@@ -422,7 +422,6 @@ return /******/ (function(modules) { // webpackBootstrap
                     }
 
                     if (this.canIgnoreNode(currentTextNode)) {
-                      nextTextNode = currentTextNode;
                       continue;
                     }
 
@@ -432,13 +431,12 @@ return /******/ (function(modules) { // webpackBootstrap
                       currentTextNode.data = newText;
                     }
 
-                    if (nextTextNode instanceof Text) {
-                      if (currentTextNode.nextSibling && currentTextNode.nextSibling.nodeName.search(this.spaceLikeTags) >= 0) {
-                        nextTextNode = currentTextNode;
+                    if (sNextTextNode instanceof Text) {
+                      if ((currentTextNode.nextSibling instanceof Element) && currentTextNode.nextSibling.nodeName.search(this.spaceLikeTags) >= 0) {
                         continue;
                       }
 
-                      let _testText2 = lastChar(currentTextNode.data) + firstChar(nextTextNode.data);
+                      let _testText2 = lastChar(currentTextNode.data) + firstChar(sNextTextNode.data);
 
                       let _testNewText2 = this.spacing(_testText2);
 
@@ -446,36 +444,31 @@ return /******/ (function(modules) { // webpackBootstrap
 
                         let currentNode = currentTextNode;
 
-                        while (currentNode.parentNode && currentNode.nodeName.search(this.spaceSensitiveTags) === -1 && this.isLastTextChild(currentNode.parentNode, currentNode)) {
+                        while ((currentNode.parentNode instanceof Element) && currentNode.nodeName.search(this.spaceSensitiveTags) === -1 && this.isLastTextChild(currentNode.parentNode, currentNode)) {
                           currentNode = currentNode.parentNode;
                         }
 
-                        if (currentNode.nextSibling) {
-                          if (currentNode.nextSibling.nodeName.search(this.spaceLikeTags) >= 0) {
-                            nextTextNode = currentTextNode;
-                            continue;
-                          }
+                        if ((currentNode.nextSibling instanceof Element) && currentNode.nextSibling.nodeName.search(this.spaceLikeTags) >= 0) {
+                          continue;
                         }
-
-
 
                         if (currentNode.nodeName.search(this.blockTags) === -1) {
 
-                          let nextNode = nextTextNode;
+                          let nextNode = sNextTextNode;
 
-                          while (nextNode.parentNode && nextNode.nodeName.search(this.spaceSensitiveTags) === -1 && this.isFirstTextChild(nextNode.parentNode, nextNode)) {
+                          while ((nextNode.parentNode instanceof Element) && nextNode.nodeName.search(this.spaceSensitiveTags) === -1 && this.isFirstTextChild(nextNode.parentNode, nextNode)) {
                             nextNode = nextNode.parentNode;
                           }
 
                           if (nextNode.nodeName.search(this.spaceSensitiveTags) === -1) {
                             if (nextNode.nodeName.search(this.ignoredTags) === -1 && nextNode.nodeName.search(this.blockTags) === -1) {
-                              if (nextTextNode.previousSibling) {
-                                if (nextTextNode.previousSibling.nodeName.search(this.spaceLikeTags) === -1) {
-                                  nextTextNode.data = " " + nextTextNode.data;
+                              if (sNextTextNode.previousSibling) {
+                                if (sNextTextNode.previousSibling.nodeName.search(this.spaceLikeTags) === -1) {
+                                  sNextTextNode.data = " " + sNextTextNode.data;
                                 }
                               } else {
-                                if (!this.canIgnoreNode(nextTextNode)) {
-                                  nextTextNode.data = " " + nextTextNode.data;
+                                if (!this.canIgnoreNode(sNextTextNode)) {
+                                  sNextTextNode.data = " " + sNextTextNode.data;
                                 }
                               }
                             }
@@ -485,25 +478,17 @@ return /******/ (function(modules) { // webpackBootstrap
                             const panguSpace = document.createElement('pangu');
                             panguSpace.innerHTML = ' ';
 
-                            if (nextNode.previousSibling) {
-                              if (nextNode.previousSibling.nodeName.search(this.spaceLikeTags) === -1) {
-                                nextNode.parentNode.insertBefore(panguSpace, nextNode);
-                              }
-                            } else {
+                            if ((nextNode.previousSibling instanceof Node) ? nextNode.previousSibling.nodeName.search(this.spaceLikeTags) === -1 : true) {
                               nextNode.parentNode.insertBefore(panguSpace, nextNode);
-                            }
-
-                            if (!panguSpace.previousElementSibling) {
-                              if (panguSpace.parentNode) {
+                              if (panguSpace.previousElementSibling === null && panguSpace.parentNode) {
                                 panguSpace.parentNode.removeChild(panguSpace);
                               }
                             }
+
                           }
                         }
                       }
                     }
-
-                    nextTextNode = currentTextNode;
                   }
                 }
                 spacingNode(contextNode) {
