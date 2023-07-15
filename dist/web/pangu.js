@@ -348,7 +348,7 @@ return /******/ (function(modules) { // webpackBootstrap
                 constructor() {
                   this.blockTags = ["DIV", "P", "H1", "H2", "H3", "H4", "H5", "H6"];
                   this.ignoredTags = ["SCRIPT", "CODE", "PRE", "TEXTAREA"];
-                  this.presentationalTags = ["B", "CODE", "DEL", "EM", "I", "S", "STRONG", "KBD"];
+                  this.presentationalTags = ["B", "CODE", "DEL", "EM", "I", "S", "STRONG", "KBD", "U", "INS"];
                   this.spaceLikeTags = ["BR", "HR", "I", "IMG", "PANGU"];
                   this.spaceSensitiveTags = ["A", "DEL", "PRE", "S", "STRIKE", "U"];
                 }                
