@@ -175,8 +175,8 @@ return /******/ (function(modules) { // webpackBootstrap
               const Q_ADD_SPACE_2 = new RegExp(`([${CJK}])([“])([${CJK}]+)([”])([${CJK}])`, 'g')
               const Q_ADD_SPACE_3 = new RegExp(`([${CJK}])([‘])([${CJK}]+)([’])([${CJK}])`, 'g')
               const Q_ADD_SPACE_4 = new RegExp(`([${CJK}])([(])([${CJK}]+)([)])([${CJK}])`, 'g')
-              const Q_ADD_SPACE_5 = new RegExp(`([${CJK}])([\\[]])([${CJK}]+)([\\]])([${CJK}])`, 'g')
-              const Q_ADD_SPACE_6 = new RegExp(`([${CJK}])([\\{}]])([${CJK}]+)([\\}])([${CJK}])`, 'g')
+              const Q_ADD_SPACE_5 = new RegExp(`([${CJK}])([\\[])([${CJK}]+)([\\]])([${CJK}])`, 'g')
+              const Q_ADD_SPACE_6 = new RegExp(`([${CJK}])([\\{])([${CJK}]+)([\\}])([${CJK}])`, 'g')
 
               function loopReplace(text, search, replacement) {
                 let maxN = Math.round(text.length / 2) + 4;
