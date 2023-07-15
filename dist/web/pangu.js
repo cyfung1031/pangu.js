@@ -180,6 +180,8 @@ return /******/ (function(modules) { // webpackBootstrap
               const Q_ADD_SPACE_6 = new RegExp(`([${CJK}])([\\{])([${CJK}]+)([\\}])([${CJK}])`, 'g')
 
               const QA_ADD_SPACE = new RegExp(`([${CJK}])(['"“”‘’(){}\\[\\]])([^'"“”‘’(){}\\[\\]]+)(['"“”‘’(){}\\[\\]])([${CMB2}])`)
+              const QA_ADD_SPACE_2 = new RegExp(`([${CJK}])(['"“”‘’(){}\\[\\]])([a-zA-Z0-9.,]+)(['"“”‘’(){}\\[\\]])([${CJK}])`)
+              
 
               function loopReplace(text, search, replacement) {
                 let maxN = Math.round(text.length / 2) + 4;
@@ -192,6 +194,24 @@ return /******/ (function(modules) { // webpackBootstrap
 
               function convertToFullwidth(symbols) {
                 return symbols.replace(/[~!;:,?]/g, (x) => String.fromCharCode(x.charCodeAt() + 65248)) // .replace(/\./g, '。')
+              }
+
+              function bracket(b, d) {
+                let z = false;
+                if (b === '\'' || b === '"') {
+                  if (d === b) z = true;
+                } else if (b === '“') {
+                  if (d === '”') z = true;
+                } else if (b === '‘') {
+                  if (d === '’') z = true;
+                } else if (b === '(') {
+                  if (d === ')') z = true;
+                } else if (b === '[') {
+                  if (d === ']') z = true;
+                } else if (b === '{') {
+                  if (d === '}') z = true;
+                }
+                return z;
               }
 
               function replacer(text) {
@@ -267,20 +287,11 @@ return /******/ (function(modules) { // webpackBootstrap
                   newText = loopReplace(newText, Q_ADD_SPACE_5, '$1 $2$3$4 $5');
                   newText = loopReplace(newText, Q_ADD_SPACE_6, '$1 $2$3$4 $5');
                   newText = loopReplace(newText, QA_ADD_SPACE, (_, a, b, c, d, e) => {
-                    let z = false;
-                    if (b === '\'' || b === '"') {
-                      if (d === b) z = true;
-                    } else if (b === '“') {
-                      if (d === '”') z = true;
-                    } else if (b === '‘') {
-                      if (d === '’') z = true;
-                    } else if (b === '(') {
-                      if (d === ')') z = true;
-                    } else if (b === '[') {
-                      if (d === ']') z = true;
-                    } else if (b === '{') {
-                      if (d === '}') z = true;
-                    }
+                    let z = bracket(b, d);
+                    return z ? `${a} ${b}${c}${d}${e}` : _;
+                  })
+                  newText = loopReplace(newText, QA_ADD_SPACE_2, (_, a, b, c, d, e) => {
+                    let z = bracket(b, d);
                     return z ? `${a} ${b}${c}${d}${e}` : _;
                   })
                 }
