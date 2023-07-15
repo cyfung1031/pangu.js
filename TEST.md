@@ -1,7 +1,7 @@
 ## This file is just for testing
 
-File: https://github.com/cyfung1031/pangu.js/blob/master/dist/web/pangu.js
-UserScript: https://greasyfork.org/scripts/470865-%E4%B8%AD%E8%8B%B1%E6%96%87%E4%B9%8B%E9%97%B4%E5%8A%A0%E7%A9%BA%E7%99%BD
+* File: https://github.com/cyfung1031/pangu.js/blob/master/dist/web/pangu.js
+* UserScript: https://greasyfork.org/scripts/470865-%E4%B8%AD%E8%8B%B1%E6%96%87%E4%B9%8B%E9%97%B4%E5%8A%A0%E7%A9%BA%E7%99%BD
 
 ## Samples
 
