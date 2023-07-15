@@ -275,15 +275,16 @@ return /******/ (function(modules) { // webpackBootstrap
                 */
 
 
+                const nLen = text.length;
 
-                newText = loopReplace(newText, M_ADD_SPACE, '$1 $2 $3');
+                if (nLen >= 3) newText = loopReplace(newText, M_ADD_SPACE, '$1 $2 $3');
                 newText = loopReplace(newText, P_ADD_SPACE, '$1$2 $3');
                 newText = loopReplace(newText, S_ADD_SPACE, '$1 $2$3');
 
-                newText = loopReplace(newText, M_ADD_SPACE_2, '$1$2 $3');
-                newText = loopReplace(newText, M_ADD_SPACE_3, '$1 $2$3');
+                if (nLen >= 3) newText = loopReplace(newText, M_ADD_SPACE_2, '$1$2 $3');
+                if (nLen >= 3) newText = loopReplace(newText, M_ADD_SPACE_3, '$1 $2$3');
 
-                newText = loopReplace(newText, M_COV_SYMBOL, (_, a, b, c) => {
+                if (nLen >= 3) newText = loopReplace(newText, M_COV_SYMBOL, (_, a, b, c) => {
 
                   let d = convertToFullwidth(b);
                   if (typeof d === 'string' && d !== b) {
@@ -292,9 +293,11 @@ return /******/ (function(modules) { // webpackBootstrap
                   return _;
                 });
 
-                newText = loopReplace(newText, S_ADD_SPACE_2, '$1$2 $3');
-                newText = loopReplace(newText, A_ADD_SPACE, '$1 $2 $3');
-                if (/['"“”‘’(){}\[\]]/.test(newText)) {
+                if (nLen >= 3) newText = loopReplace(newText, S_ADD_SPACE_2, '$1$2 $3');
+                if (nLen >= 3) newText = loopReplace(newText, A_ADD_SPACE, '$1 $2 $3');
+
+                if (nLen >= 5 && /['"“”‘’(){}\[\]]/.test(newText)) {
+
                   newText = loopReplace(newText, Q_ADD_SPACE, '$1 $2$3$2 $4');
                   newText = loopReplace(newText, Q_ADD_SPACE_2, '$1 $2$3$4 $5');
                   newText = loopReplace(newText, Q_ADD_SPACE_3, '$1 $2$3$4 $5');
@@ -310,7 +313,6 @@ return /******/ (function(modules) { // webpackBootstrap
                     return z ? `${a} ${b}${c}${d} ${e}` : _;
                   })
 
-
                   newText = loopReplace(newText, Q_ADD_SPACE_1b, '$1$2$3$2 $4');
                   newText = loopReplace(newText, Q_ADD_SPACE_2b, '$1$2$3$4 $5');
                   newText = loopReplace(newText, Q_ADD_SPACE_3b, '$1$2$3$4 $5');
@@ -318,17 +320,18 @@ return /******/ (function(modules) { // webpackBootstrap
                   newText = loopReplace(newText, Q_ADD_SPACE_5b, '$1$2$3$4 $5');
                   newText = loopReplace(newText, Q_ADD_SPACE_6b, '$1$2$3$4 $5');
 
-
                 }
 
                 return newText;
               }
 
               function firstChar(s) {
+                if (s.length === 0) return '\x00';
                 return s.charAt(0);
               }
 
               function lastChar(s) {
+                if (s.length === 0) return '\x00';
                 return s.charAt(s.length - 1);
               }
 
