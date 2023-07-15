@@ -158,19 +158,19 @@ return /******/ (function(modules) { // webpackBootstrap
               const S_A = /(%)([A-Za-z])/g;
               const MIDDLE_DOT = /([ ]*)([\u00b7\u2022\u2027])([ ]*)/g;
 
-              const M_ADD_SPACE = new RegExp(`([${CJK}])([a-zA-Z0-9]+|[a-zA-Z0-9]+[\x20-\xFF]+[a-zA-Z0-9]+|[a-zA-Z0-9][a-zA-Z0-9.,]*[a-zA-Z0-9][%°])([${CJK}])`, 'g')
-              const P_ADD_SPACE = new RegExp(`(^|[\r\n])([a-zA-Z0-9]+|[a-zA-Z0-9]+[\x20-\xFF]+[a-zA-Z0-9]+)([${CJK}])`, 'g')
-              const S_ADD_SPACE = new RegExp(`([${CJK}])([a-zA-Z0-9]+|[a-zA-Z0-9]+[\x20-\xFF]+[a-zA-Z0-9]+)([\r\n]|$)`, 'g')
+              const M_ADD_SPACE = new RegExp(`([${CJK}])([a-zA-Z0-9]+|[a-zA-Z0-9]+[\\x20-\\xFF]+[a-zA-Z0-9]+|[a-zA-Z0-9][a-zA-Z0-9.,]*[a-zA-Z0-9][%°])([${CJK}])`, 'g')
+              const P_ADD_SPACE = new RegExp(`(^|[\\r\\n])([a-zA-Z0-9]+|[a-zA-Z0-9]+[\\x20-\\xFF]+[a-zA-Z0-9]+)([${CJK}])`, 'g')
+              const S_ADD_SPACE = new RegExp(`([${CJK}])([a-zA-Z0-9]+|[a-zA-Z0-9]+[\\x20-\\xFF]+[a-zA-Z0-9]+)([\\r\\n]|$)`, 'g')
 
               const CMB = "\uff01-\uff64\u3001\u3002";
 
-              const M_ADD_SPACE_2 = new RegExp(`([${CMB}])([a-zA-Z0-9]+|[a-zA-Z0-9]+[\x20-\xFF]+[a-zA-Z0-9]+)([${CJK}])`, 'g')
-              const M_ADD_SPACE_3 = new RegExp(`([${CJK}])([a-zA-Z0-9]+|[a-zA-Z0-9]+[\x20-\xFF]+[a-zA-Z0-9]+|[a-zA-Z0-9][a-zA-Z0-9.,]*[a-zA-Z0-9][%°])([${CMB}])`, 'g')
+              const M_ADD_SPACE_2 = new RegExp(`([${CMB}])([a-zA-Z0-9]+|[a-zA-Z0-9]+[\\x20-\\xFF]+[a-zA-Z0-9]+)([${CJK}])`, 'g')
+              const M_ADD_SPACE_3 = new RegExp(`([${CJK}])([a-zA-Z0-9]+|[a-zA-Z0-9]+[\\x20-\\xFF]+[a-zA-Z0-9]+|[a-zA-Z0-9][a-zA-Z0-9.,]*[a-zA-Z0-9][%°])([${CMB}])`, 'g')
 
               const M_COV_SYMBOL = new RegExp(`([${CJK}])([~!;:,?])([${CJK}])`, 'g')
               const S_ADD_SPACE_2 = new RegExp(`([a-zA-Z0-9]+)([~!;:,?])([${CJK}])`, 'g')
 
-              const A_ADD_SPACE = new RegExp(`([${CJK}])([!#$%&\x2A-\x5A\x5E\x5F\x61-\x7A~\x80-\xFF]+)\x20([${CJK}])`, 'g')
+              const A_ADD_SPACE = new RegExp(`([${CJK}])([!#$%&\\x2A-\\x5A\\x5E\\x5F\\x61-\\x7A~\\x80-\\xFF]+)\\x20([${CJK}])`, 'g')
               const Q_ADD_SPACE = new RegExp(`([${CJK}])(['"])([${CJK}]+)\\1([${CJK}])`, 'g')
               const Q_ADD_SPACE_2 = new RegExp(`([${CJK}])([“])([${CJK}]+)([”])([${CJK}])`, 'g')
               const Q_ADD_SPACE_3 = new RegExp(`([${CJK}])([‘])([${CJK}]+)([’])([${CJK}])`, 'g')
@@ -178,7 +178,7 @@ return /******/ (function(modules) { // webpackBootstrap
               const Q_ADD_SPACE_5 = new RegExp(`([${CJK}])([\\[])([${CJK}]+)([\\]])([${CJK}])`, 'g')
               const Q_ADD_SPACE_6 = new RegExp(`([${CJK}])([\\{])([${CJK}]+)([\\}])([${CJK}])`, 'g')
 
-              const QA_ADD_SPACE = new RegExp(`([${CJK}])(['"“”‘’(){}\[\]])([^'"“”‘’(){}\[\]]+)(['"“”‘’(){}\[\]])([${CMB}])`)
+              const QA_ADD_SPACE = new RegExp(`([${CJK}])(['"“”‘’(){}\\[\\]])([^'"“”‘’(){}\\[\\]]+)(['"“”‘’(){}\\[\\]])([${CMB}])`)
 
               function loopReplace(text, search, replacement) {
                 let maxN = Math.round(text.length / 2) + 4;
