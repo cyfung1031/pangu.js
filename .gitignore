@@ -3,3 +3,4 @@
 browser_extensions/paranoid-auto-spacing.zip
 coverage/
 node_modules/
+dist/.DS_Store

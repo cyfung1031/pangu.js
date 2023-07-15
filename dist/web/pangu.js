@@ -126,6 +126,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
             let WebPangu = function () {
 
+              const NO_BACKWARD_MATCHING = true; // BACKWARD_MATCHING TO BE CONFIRMED
 
               const CJK = "\u2E80-\u2EFF\u2F00-\u2FDF\u3040-\u309F\u30A0-\u30FA\u30FC-\u30FF\u3100-\u312F\u3200-\u32FF\u3400-\u4DBF\u4E00-\u9FFF\uF900-\uFAFF";
               const ANY_CJK = new RegExp("[" + CJK + "]");
@@ -180,7 +181,6 @@ return /******/ (function(modules) { // webpackBootstrap
               const Q_ADD_SPACE_4 = new RegExp(`([${CJK}])([(])([${CJK2}]+)([)])([${CJK}])`, 'g')
               const Q_ADD_SPACE_5 = new RegExp(`([${CJK}])([\\[])([${CJK2}]+)([\\]])([${CJK}])`, 'g')
               const Q_ADD_SPACE_6 = new RegExp(`([${CJK}])([\\{])([${CJK2}]+)([\\}])([${CJK}])`, 'g')
-
 
               const Q_ADD_SPACE_1b = new RegExp(`([${CMB}])(['"])([${CJK2}]+)\\1([${CJK}])`, 'g')
               const Q_ADD_SPACE_2b = new RegExp(`([${CMB}])([“])([${CJK2}]+)([”])([${CJK}])`, 'g')
@@ -346,21 +346,21 @@ return /******/ (function(modules) { // webpackBootstrap
 
               class WebPangu {
                 constructor() {
-                  this.blockTags = /^(div|p|h1|h2|h3|h4|h5|h6)$/i;
-                  this.ignoredTags = /^(script|code|pre|textarea)$/i;
-                  this.presentationalTags = /^(b|code|del|em|i|s|strong|kbd)$/i;
-                  this.spaceLikeTags = /^(br|hr|i|img|pangu)$/i;
-                  this.spaceSensitiveTags = /^(a|del|pre|s|strike|u)$/i;
-                }
+                  this.blockTags = ["DIV", "P", "H1", "H2", "H3", "H4", "H5", "H6"];
+                  this.ignoredTags = ["SCRIPT", "CODE", "PRE", "TEXTAREA"];
+                  this.presentationalTags = ["B", "CODE", "DEL", "EM", "I", "S", "STRONG", "KBD"];
+                  this.spaceLikeTags = ["BR", "HR", "I", "IMG", "PANGU"];
+                  this.spaceSensitiveTags = ["A", "DEL", "PRE", "S", "STRIKE", "U"];
+                }                
                 isContentEditable(node) {
                   return node.isContentEditable || node.getAttribute && node.getAttribute('g_editable') === 'true';
                 }
-                isSpecificTag(node, tagRegex) {
-                  return node && node.nodeName && node.nodeName.search(tagRegex) >= 0;
+                isSpecificTag(node, tagArray) {
+                  return node && node.nodeName && tagArray.includes(node.nodeName);
                 }
-                isInsideSpecificTag(node, tagRegex) {
+                isInsideSpecificTag(node, tagArray) {
                   while ((node = node.parentNode) instanceof Element) {
-                    if (this.isSpecificTag(node, tagRegex)) {
+                    if (this.isSpecificTag(node, tagArray)) {
                       return true;
                     }
                   }
@@ -404,95 +404,122 @@ return /******/ (function(modules) { // webpackBootstrap
                   }
 
                   const textNodes = document.evaluate(xPathQuery, contextNode, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null);
-                  let nextTextNode;
+                  let tNextTextNode;
+
+                  const cache = new Map();
+
+                  const spacing = (contents) => {
+
+
+                    let r = cache.get(contents);
+                    if (r !== undefined) return r;
+                    r = this.spacing(contents);
+                    cache.set(contents, r);
+
+                    if (r !== null) {
+                      cache.set(r, r);
+                    }
+                    return r;
+                  }
 
                   for (let i = textNodes.snapshotLength; --i >= 0;) {
                     const currentTextNode = textNodes.snapshotItem(i);
                     if (!(currentTextNode instanceof Text)) continue;
-                    const sNextTextNode = nextTextNode;
-                    nextTextNode = currentTextNode;
-                    if (weakSet.has(currentTextNode)) {
-                      continue;
-                    }
+                    const sNextTextNode = tNextTextNode;
+                    tNextTextNode = currentTextNode;
+                    if (weakSet.has(currentTextNode)) continue;
+
                     weakSet.add(currentTextNode);
                     const currentTextNodeData = currentTextNode.data;
-                    if (!anyPossibleCJK(currentTextNodeData)) {
-                      continue;
-                    }
+                    if (!anyPossibleCJK(currentTextNodeData)) continue;
 
-                    const textNodeParent = currentTextNode.parentNode;
-                    if (this.isSpecificTag(textNodeParent, this.presentationalTags) && !this.isInsideSpecificTag(textNodeParent, this.ignoredTags)) {
+                    const elementNode = currentTextNode.parentNode;
 
-                      const previousSibling = textNodeParent.previousSibling;
-                      if (previousSibling instanceof Text) {
-                        const testRes = this.spacing(lastChar(previousSibling.data) + firstChar(currentTextNodeData));
-                        if (testRes !== null) {
-                          previousSibling.data = "" + previousSibling.data + " ";
-                        }
-                      }
+                    if (this.canIgnoreNode(elementNode)) continue;
 
-                      const nextSibling = textNodeParent.nextSibling;
-                      if (nextSibling instanceof Text) {
-                        const testRes = this.spacing(lastChar(currentTextNodeData) + firstChar(nextSibling.data));
-                        if (testRes !== null) {
-                          nextSibling.data = " " + nextSibling.data;
-                        }
-                      }
-                    }
-
-                    if (this.canIgnoreNode(currentTextNode)) {
-                      continue;
-                    }
-
-                    const currentTextNodeNewText = this.spacing(currentTextNodeData);
-
+                    const currentTextNodeNewText = spacing(currentTextNodeData);
                     if (currentTextNodeNewText !== null) {
                       currentTextNode.data = currentTextNodeNewText;
                     }
 
+                    let prevTextNode = null;
+                    let nextTextNode = null;
+
+                    if (this.isSpecificTag(elementNode, this.presentationalTags) && !this.isInsideSpecificTag(elementNode, this.ignoredTags)) {
+
+                      const previousSibling = elementNode.previousSibling;
+                      if (previousSibling instanceof Text) prevTextNode = previousSibling;
+
+                      const nextSibling = elementNode.nextSibling;
+                      if (nextSibling instanceof Text) nextTextNode = nextSibling;
+
+                    }
+
+                    if ((prevTextNode || nextTextNode) && !this.canIgnoreNode(elementNode.parentNode)) {
+
+                      let prevTextNodeNewText = null;
+                      let nextTextNodeNewText = null;
+                      if (prevTextNode) prevTextNodeNewText = spacing(prevTextNode.data);
+                      if (nextTextNode) nextTextNodeNewText = spacing(nextTextNode.data);
+
+                      const textPrev = !prevTextNode ? '' : prevTextNodeNewText || prevTextNode.data;
+                      const textNext = !nextTextNode ? '' : nextTextNodeNewText || nextTextNode.data;
+                      const textMiddle = currentTextNodeNewText || currentTextNode.data;
+
+                      const testRes = this.spacing(textPrev + textMiddle + textNext);
+
+                      if (testRes) {
+                        if (textPrev && testRes.startsWith(textPrev + ' ' + textMiddle)) prevTextNodeNewText = textPrev + ' ';
+                        if (textNext && testRes.endsWith(textMiddle + ' ' + textNext)) nextTextNodeNewText = ' ' + textNext;
+                      }
+
+                      if (prevTextNodeNewText) prevTextNode.data = prevTextNodeNewText;
+                      if (nextTextNodeNewText) nextTextNode.data = nextTextNodeNewText;
+                    }
+
                     if (sNextTextNode instanceof Text) {
-                      if ((currentTextNode.nextSibling instanceof Element) && currentTextNode.nextSibling.nodeName.search(this.spaceLikeTags) >= 0) {
+                      if ((currentTextNode.nextSibling instanceof Element) && this.spaceLikeTags.includes(currentTextNode.nextSibling.nodeName)) {
                         continue;
                       }
 
-                      const testRes = this.spacing(lastChar(currentTextNode.data) + firstChar(sNextTextNode.data));
+                      const testRes = NO_BACKWARD_MATCHING ? null : this.spacing(lastChar(currentTextNode.data) + firstChar(sNextTextNode.data));
 
                       if (testRes !== null) {
 
                         let currentNode = currentTextNode;
 
-                        while ((currentNode.parentNode instanceof Element) && currentNode.nodeName.search(this.spaceSensitiveTags) === -1 && this.isLastTextChild(currentNode.parentNode, currentNode)) {
+                        while ((currentNode.parentNode instanceof Element) && !this.spaceSensitiveTags.includes(currentNode.nodeName) && this.isLastTextChild(currentNode.parentNode, currentNode)) {
                           currentNode = currentNode.parentNode;
                         }
 
-                        if ((currentNode.nextSibling instanceof Element) && currentNode.nextSibling.nodeName.search(this.spaceLikeTags) >= 0) {
+                        if ((currentNode.nextSibling instanceof Element) && this.spaceLikeTags.includes(currentNode.nextSibling.nodeName)) {
                           continue;
                         }
 
-                        if (currentNode.nodeName.search(this.blockTags) === -1) {
+                        if (!this.blockTags.includes(currentNode.nodeName)) {
 
                           let nextNode = sNextTextNode;
 
-                          while ((nextNode.parentNode instanceof Element) && nextNode.nodeName.search(this.spaceSensitiveTags) === -1 && this.isFirstTextChild(nextNode.parentNode, nextNode)) {
+                          while ((nextNode.parentNode instanceof Element) && !this.spaceSensitiveTags.includes(nextNode.nodeName) && this.isFirstTextChild(nextNode.parentNode, nextNode)) {
                             nextNode = nextNode.parentNode;
                           }
 
-                          if (nextNode.nodeName.search(this.spaceSensitiveTags) === -1) {
-                            if (nextNode.nodeName.search(this.ignoredTags) === -1 && nextNode.nodeName.search(this.blockTags) === -1) {
+                          if (!this.spaceSensitiveTags.includes(nextNode.nodeName)) {
+                            if (!this.ignoredTags.includes(nextNode.nodeName) && !this.blockTags.includes(nextNode.nodeName)) {
                               const b = sNextTextNode.previousSibling
-                                ? sNextTextNode.previousSibling.nodeName.search(this.spaceLikeTags) === -1
-                                : !this.canIgnoreNode(sNextTextNode);
+                                ? !this.spaceLikeTags.includes(sNextTextNode.previousSibling.nodeName)
+                                : !this.canIgnoreNode(sNextTextNode.parentElement);
                               if (b) {
                                 sNextTextNode.data = " " + sNextTextNode.data;
                               }
                             }
-                          } else if (currentNode.nodeName.search(this.spaceSensitiveTags) === -1) {
+                          } else if (!this.spaceSensitiveTags.includes(currentNode.nodeName)) {
                             currentTextNode.data = "" + currentTextNode.data + " ";
                           } else {
                             const panguSpace = document.createElement('pangu');
                             panguSpace.appendChild(document.createTextNode(' '));
 
-                            const b = !(nextNode.previousSibling instanceof Node) || (nextNode.previousSibling.nodeName.search(this.spaceLikeTags) === -1);
+                            const b = !(nextNode.previousSibling instanceof Node) || !this.spaceLikeTags.includes(nextNode.previousSibling.nodeName);
 
                             if (b && nextNode.previousElementSibling !== null) {
                               nextNode.parentNode.insertBefore(panguSpace, nextNode);
