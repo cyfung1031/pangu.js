@@ -170,7 +170,7 @@ return /******/ (function(modules) { // webpackBootstrap
               const M_COV_SYMBOL = new RegExp(`([${CJK}])([~!;:,?])([${CJK}])`, 'g')
               const S_ADD_SPACE_2 = new RegExp(`([a-zA-Z0-9]+)([~!;:,?])([${CJK}])`, 'g')
 
-              const A_ADD_SPACE = new RegExp(`([${CJK}])([\x21-\xFF]+)\x20([${CJK}])`, 'g')
+              const A_ADD_SPACE = new RegExp(`([${CJK}])([!#$%&\x2A-\x5A\x5E\x5F\x61-\x7A~\x80-\xFF]+)\x20([${CJK}])`, 'g')
               const Q_ADD_SPACE = new RegExp(`([${CJK}])(['"])([${CJK}]+)\\1([${CJK}])`, 'g')
               const Q_ADD_SPACE_2 = new RegExp(`([${CJK}])([“])([${CJK}]+)([”])([${CJK}])`, 'g')
               const Q_ADD_SPACE_3 = new RegExp(`([${CJK}])([‘])([${CJK}]+)([’])([${CJK}])`, 'g')
@@ -185,6 +185,87 @@ return /******/ (function(modules) { // webpackBootstrap
                   if (t === text) return t;
                   text = t;
                 }
+              }
+
+              function convertToFullwidth(symbols) {
+                return symbols.replace(/[~!;:,?]/g, (x) => String.fromCharCode(x.charCodeAt() + 65248)) // .replace(/\./g, '。')
+              }
+
+              function replacer(text){
+
+                  // let self = this;
+                  let newText = text;
+                  /*
+                  newText = newText.replace(CONVERT_TO_FULLWIDTH_CJK_SYMBOLS_CJK, function (match, leftCjk, symbols, rightCjk) {
+                    let fullwidthSymbols = convertToFullwidth(symbols);
+                    return "" + leftCjk + fullwidthSymbols + rightCjk;
+                  });
+                  newText = newText.replace(CONVERT_TO_FULLWIDTH_CJK_SYMBOLS, function (match, cjk, symbols) {
+                    let fullwidthSymbols = convertToFullwidth(symbols);
+                    return "" + cjk + fullwidthSymbols;
+                  });
+                  */
+
+                  /*
+                  newText = newText.replace(DOTS_CJK, '$1 $2');
+                  // newText = newText.replace(FIX_CJK_COLON_ANS, '$1：$2');
+                  newText = newText.replace(CJK_QUOTE, '$1 $2');
+                  newText = newText.replace(QUOTE_CJK, '$1 $2');
+                  // newText = newText.replace(FIX_QUOTE_ANY_QUOTE, '$1$2$3');
+                  newText = newText.replace(CJK_SINGLE_QUOTE_BUT_POSSESSIVE, '$1 $2');
+                  newText = newText.replace(SINGLE_QUOTE_CJK, '$1 $2');
+                  newText = newText.replace(FIX_POSSESSIVE_SINGLE_QUOTE, "$1's");
+                  newText = newText.replace(HASH_ANS_CJK_HASH, '$1 $2$3$4 $5');
+                  newText = newText.replace(CJK_HASH, '$1 $2');
+                  newText = newText.replace(HASH_CJK, '$1 $3');
+                  newText = newText.replace(CJK_OPERATOR_ANS, '$1 $2 $3');
+                  newText = newText.replace(ANS_OPERATOR_CJK, '$1 $2 $3');
+                  // newText = newText.replace(FIX_SLASH_AS, '$1$2');
+                  // newText = newText.replace(FIX_SLASH_AS_SLASH, '$1$2$3');
+                  newText = newText.replace(CJK_LEFT_BRACKET, '$1 $2');
+                  newText = newText.replace(RIGHT_BRACKET_CJK, '$1 $2');
+                  // newText = newText.replace(FIX_LEFT_BRACKET_ANY_RIGHT_BRACKET, '$1$2$3');
+                  newText = newText.replace(ANS_CJK_LEFT_BRACKET_ANY_RIGHT_BRACKET, '$1 $2$3$4');
+                  newText = newText.replace(LEFT_BRACKET_ANY_RIGHT_BRACKET_ANS_CJK, '$1$2$3 $4');
+                  // newText = newText.replace(AN_LEFT_BRACKET, '$1 $2');
+                  // newText = newText.replace(RIGHT_BRACKET_AN, '$1 $2');
+                  newText = newText.replace(CJK_ANS, '$1 $2');
+                  newText = newText.replace(ANS_CJK, '$1 $2');
+                  // newText = newText.replace(S_A, '$1 $2');
+                  // newText = newText.replace(MIDDLE_DOT, '・');
+
+                  */
+
+
+
+                  newText = loopReplace(newText, M_ADD_SPACE, '$1 $2 $3');
+                  newText = loopReplace(newText, P_ADD_SPACE, '$1$2 $3');
+                  newText = loopReplace(newText, S_ADD_SPACE, '$1 $2$3');
+
+                  newText = loopReplace(newText, M_ADD_SPACE_2, '$1$2 $3');
+                  newText = loopReplace(newText, M_ADD_SPACE_3, '$1 $2$3');
+
+                  newText = loopReplace(newText, M_COV_SYMBOL, (_, a, b, c) => {
+
+                    let d = convertToFullwidth(b);
+                    if (typeof d === 'string' && d !== b) {
+                      return a + d + c;
+                    }
+                    return _;
+                  });
+
+                  newText = loopReplace(newText, S_ADD_SPACE_2, '$1$2 $3');
+                  newText = loopReplace(newText, A_ADD_SPACE, '$1 $2 $3');
+                  if (/['"“”‘’(){}\[\]]/.test(newText)) {
+                    newText = loopReplace(newText, Q_ADD_SPACE, '$1 $2$3$2 $4');
+                    newText = loopReplace(newText, Q_ADD_SPACE_2, '$1 $2$3$4 $5');
+                    newText = loopReplace(newText, Q_ADD_SPACE_3, '$1 $2$3$4 $5');
+                    newText = loopReplace(newText, Q_ADD_SPACE_4, '$1 $2$3$4 $5');
+                    newText = loopReplace(newText, Q_ADD_SPACE_5, '$1 $2$3$4 $5');
+                    newText = loopReplace(newText, Q_ADD_SPACE_6, '$1 $2$3$4 $5');
+                  }
+
+                  return newText;
               }
 
               function firstChar(s) {
@@ -390,9 +471,6 @@ return /******/ (function(modules) { // webpackBootstrap
                   const xPathQuery = xPathQueryArr.join('');
                   this.spacingNodeByXPath(xPathQuery, document);
                 }
-                convertToFullwidth(symbols) {
-                  return symbols.replace(/[~!;:,?]/g, (x) => String.fromCharCode(x.charCodeAt() + 65248)) // .replace(/\./g, '。')
-                }
                 spacing(text) {
                   if (typeof text !== 'string') {
                     console.warn("spacing(text) only accepts string but got " + _typeof(text));
@@ -403,79 +481,7 @@ return /******/ (function(modules) { // webpackBootstrap
                     return text;
                   }
 
-                  // let self = this;
-                  let newText = text;
-                  /*
-                  newText = newText.replace(CONVERT_TO_FULLWIDTH_CJK_SYMBOLS_CJK, function (match, leftCjk, symbols, rightCjk) {
-                    let fullwidthSymbols = self.convertToFullwidth(symbols);
-                    return "" + leftCjk + fullwidthSymbols + rightCjk;
-                  });
-                  newText = newText.replace(CONVERT_TO_FULLWIDTH_CJK_SYMBOLS, function (match, cjk, symbols) {
-                    let fullwidthSymbols = self.convertToFullwidth(symbols);
-                    return "" + cjk + fullwidthSymbols;
-                  });
-                  */
-
-                  /*
-                  newText = newText.replace(DOTS_CJK, '$1 $2');
-                  // newText = newText.replace(FIX_CJK_COLON_ANS, '$1：$2');
-                  newText = newText.replace(CJK_QUOTE, '$1 $2');
-                  newText = newText.replace(QUOTE_CJK, '$1 $2');
-                  // newText = newText.replace(FIX_QUOTE_ANY_QUOTE, '$1$2$3');
-                  newText = newText.replace(CJK_SINGLE_QUOTE_BUT_POSSESSIVE, '$1 $2');
-                  newText = newText.replace(SINGLE_QUOTE_CJK, '$1 $2');
-                  newText = newText.replace(FIX_POSSESSIVE_SINGLE_QUOTE, "$1's");
-                  newText = newText.replace(HASH_ANS_CJK_HASH, '$1 $2$3$4 $5');
-                  newText = newText.replace(CJK_HASH, '$1 $2');
-                  newText = newText.replace(HASH_CJK, '$1 $3');
-                  newText = newText.replace(CJK_OPERATOR_ANS, '$1 $2 $3');
-                  newText = newText.replace(ANS_OPERATOR_CJK, '$1 $2 $3');
-                  // newText = newText.replace(FIX_SLASH_AS, '$1$2');
-                  // newText = newText.replace(FIX_SLASH_AS_SLASH, '$1$2$3');
-                  newText = newText.replace(CJK_LEFT_BRACKET, '$1 $2');
-                  newText = newText.replace(RIGHT_BRACKET_CJK, '$1 $2');
-                  // newText = newText.replace(FIX_LEFT_BRACKET_ANY_RIGHT_BRACKET, '$1$2$3');
-                  newText = newText.replace(ANS_CJK_LEFT_BRACKET_ANY_RIGHT_BRACKET, '$1 $2$3$4');
-                  newText = newText.replace(LEFT_BRACKET_ANY_RIGHT_BRACKET_ANS_CJK, '$1$2$3 $4');
-                  // newText = newText.replace(AN_LEFT_BRACKET, '$1 $2');
-                  // newText = newText.replace(RIGHT_BRACKET_AN, '$1 $2');
-                  newText = newText.replace(CJK_ANS, '$1 $2');
-                  newText = newText.replace(ANS_CJK, '$1 $2');
-                  // newText = newText.replace(S_A, '$1 $2');
-                  // newText = newText.replace(MIDDLE_DOT, '・');
-
-                  */
-
-
-
-                  newText = loopReplace(newText, M_ADD_SPACE, '$1 $2 $3');
-                  newText = loopReplace(newText, P_ADD_SPACE, '$1$2 $3');
-                  newText = loopReplace(newText, S_ADD_SPACE, '$1 $2$3');
-
-                  newText = loopReplace(newText, M_ADD_SPACE_2, '$1$2 $3');
-                  newText = loopReplace(newText, M_ADD_SPACE_3, '$1 $2$3');
-
-                  newText = loopReplace(newText, M_COV_SYMBOL, (_, a, b, c) => {
-
-                    let d = this.convertToFullwidth(b);
-                    if (typeof d === 'string' && d !== b) {
-                      return a + d + c;
-                    }
-                    return _;
-                  });
-
-                  newText = loopReplace(newText, S_ADD_SPACE_2, '$1$2 $3');
-                  newText = loopReplace(newText, A_ADD_SPACE, '$1 $2 $3');
-                  if (/['"“”‘’(){}\[\]]/.test(newText)) {
-                    newText = loopReplace(newText, Q_ADD_SPACE, '$1 $2$3$2 $4');
-                    newText = loopReplace(newText, Q_ADD_SPACE_2, '$1 $2$3$4 $5');
-                    newText = loopReplace(newText, Q_ADD_SPACE_3, '$1 $2$3$4 $5');
-                    newText = loopReplace(newText, Q_ADD_SPACE_4, '$1 $2$3$4 $5');
-                    newText = loopReplace(newText, Q_ADD_SPACE_5, '$1 $2$3$4 $5');
-                    newText = loopReplace(newText, Q_ADD_SPACE_6, '$1 $2$3$4 $5');
-                  }
-
-                  return newText;
+                  return replacer(text);
                 }
 
               }
