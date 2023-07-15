@@ -292,7 +292,7 @@ return /******/ (function(modules) { // webpackBootstrap
                   })
                   newText = loopReplace(newText, QA_ADD_SPACE_2, (_, a, b, c, d, e) => {
                     let z = bracket(b, d);
-                    return z ? `${a} ${b}${c}${d}${e}` : _;
+                    return z ? `${a} ${b}${c}${d} ${e}` : _;
                   })
                 }
 
