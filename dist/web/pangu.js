@@ -171,7 +171,7 @@ return /******/ (function(modules) { // webpackBootstrap
               const M_COV_SYMBOL = new RegExp(`([${CJK}])([~!;:,?])([${CJK}])`, 'g')
               const S_ADD_SPACE_2 = new RegExp(`([a-zA-Z0-9]+)([~!;:,?])([${CJK}])`, 'g')
 
-              const CJK2 = `${CJK}\\d,.`;
+              const CJK2 = `${CJK}\\d,.\\/\\\\`;
 
               const A_ADD_SPACE = new RegExp(`([${CJK}])([!#$%&\\x2A-\\x5A\\x5E\\x5F\\x61-\\x7A~\\x80-\\xFF]+)\\x20([${CJK}])`, 'g')
               const Q_ADD_SPACE = new RegExp(`([${CJK}])(['"])([${CJK2}]+)\\1([${CJK}])`, 'g')
