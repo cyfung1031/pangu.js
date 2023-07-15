@@ -8,6 +8,7 @@
  */
 /* Modified by CY Fung; Follow MIT License */
 /*
+Copyright (c) 2013 Vinta
 Copyright (c) 2023 CY Fung
 This software is released under the MIT License, see LICENSE.
 */
@@ -123,7 +124,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 
-            let BrowserPangu = function () {
+            let WebPangu = function () {
 
 
               const CJK = "\u2E80-\u2EFF\u2F00-\u2FDF\u3040-\u309F\u30A0-\u30FA\u30FC-\u30FF\u3100-\u312F\u3200-\u32FF\u3400-\u4DBF\u4E00-\u9FFF\uF900-\uFAFF";
@@ -188,7 +189,7 @@ return /******/ (function(modules) { // webpackBootstrap
                 return s.charAt(s.length - 1);
               }
 
-              class BrowserPangu {
+              class WebPangu {
                 constructor() {
                   this.blockTags = /^(div|p|h1|h2|h3|h4|h5|h6)$/i;
                   this.ignoredTags = /^(script|code|pre|textarea)$/i;
@@ -465,13 +466,13 @@ return /******/ (function(modules) { // webpackBootstrap
 
               }
 
-              return BrowserPangu;
+              return WebPangu;
             }();
 
-            let pangu = new BrowserPangu();
+            let pangu = new WebPangu();
             module.exports = pangu;
             module.exports.default = pangu;
-            module.exports.Pangu = BrowserPangu;
+            module.exports.Pangu = WebPangu;
           });
 
 /***/ })
