@@ -174,6 +174,9 @@ return /******/ (function(modules) { // webpackBootstrap
               const Q_ADD_SPACE = new RegExp(`([${CJK}])(['"])([${CJK}]+)\\1([${CJK}])`, 'g')
               const Q_ADD_SPACE_2 = new RegExp(`([${CJK}])([“])([${CJK}]+)([”])([${CJK}])`, 'g')
               const Q_ADD_SPACE_3 = new RegExp(`([${CJK}])([‘])([${CJK}]+)([’])([${CJK}])`, 'g')
+              const Q_ADD_SPACE_4 = new RegExp(`([${CJK}])([(])([${CJK}]+)([)])([${CJK}])`, 'g')
+              const Q_ADD_SPACE_5 = new RegExp(`([${CJK}])([\\[]])([${CJK}]+)([\\]])([${CJK}])`, 'g')
+              const Q_ADD_SPACE_6 = new RegExp(`([${CJK}])([\\{}]])([${CJK}]+)([\\}])([${CJK}])`, 'g')
 
               function loopReplace(text, search, replacement) {
                 let maxN = Math.round(text.length / 2) + 4;
@@ -463,9 +466,14 @@ return /******/ (function(modules) { // webpackBootstrap
 
                   newText = loopReplace(newText, S_ADD_SPACE_2, '$1$2 $3');
                   newText = loopReplace(newText, A_ADD_SPACE, '$1 $2 $3');
-                  newText = loopReplace(newText, Q_ADD_SPACE, '$1 $2$3$2 $4');
-                  newText = loopReplace(newText, Q_ADD_SPACE_2, '$1 $2$3$4 $5');
-                  newText = loopReplace(newText, Q_ADD_SPACE_3, '$1 $2$3$4 $5');
+                  if (/['"“”‘’(){}\[\]]/.test(newText)) {
+                    newText = loopReplace(newText, Q_ADD_SPACE, '$1 $2$3$2 $4');
+                    newText = loopReplace(newText, Q_ADD_SPACE_2, '$1 $2$3$4 $5');
+                    newText = loopReplace(newText, Q_ADD_SPACE_3, '$1 $2$3$4 $5');
+                    newText = loopReplace(newText, Q_ADD_SPACE_4, '$1 $2$3$4 $5');
+                    newText = loopReplace(newText, Q_ADD_SPACE_5, '$1 $2$3$4 $5');
+                    newText = loopReplace(newText, Q_ADD_SPACE_6, '$1 $2$3$4 $5');
+                  }
 
                   return newText;
                 }
