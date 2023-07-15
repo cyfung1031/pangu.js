@@ -307,6 +307,13 @@ return /******/ (function(modules) { // webpackBootstrap
                 return s.charAt(s.length - 1);
               }
 
+              function anyDualByte(s) {
+                for (let i = 0, l = s.length; i < l; i++) {
+                  if (s[i] > '\xFF') return true;
+                }
+                return false;
+              }
+
               const weakSet = new WeakSet();
 
               class WebPangu {
@@ -375,6 +382,10 @@ return /******/ (function(modules) { // webpackBootstrap
                       continue;
                     }
                     weakSet.add(currentTextNode);
+                    if (!anyDualByte(currentTextNode.data)) {
+                      nextTextNode = currentTextNode;
+                      continue;
+                    }
 
                     const textNodeParent = currentTextNode.parentNode;
                     if (this.isSpecificTag(textNodeParent, this.presentationalTags) && !this.isInsideSpecificTag(textNodeParent, this.ignoredTags)) {
