@@ -161,7 +161,7 @@ return /******/ (function(modules) { // webpackBootstrap
               const P_ADD_SPACE = new RegExp(`(^|[\r\n])([a-zA-Z0-9]+|[a-zA-Z0-9]+[\x20-\xFF]+[a-zA-Z0-9]+)([${CJK}])`, 'g')
               const S_ADD_SPACE = new RegExp(`([${CJK}])([a-zA-Z0-9]+|[a-zA-Z0-9]+[\x20-\xFF]+[a-zA-Z0-9]+)([\r\n]|$)`, 'g')
 
-              const CMB = "\uff01-\uff64";
+              const CMB = "\uff01-\uff64\u3002";
 
               const M_ADD_SPACE_2 = new RegExp(`([${CMB}])([a-zA-Z0-9]+|[a-zA-Z0-9]+[\x20-\xFF]+[a-zA-Z0-9]+)([${CJK}])`, 'g')
               const M_ADD_SPACE_3 = new RegExp(`([${CJK}])([a-zA-Z0-9]+|[a-zA-Z0-9]+[\x20-\xFF]+[a-zA-Z0-9]+)([${CMB}])`, 'g')
