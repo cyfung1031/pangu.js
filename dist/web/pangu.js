@@ -385,7 +385,6 @@ return /******/ (function(modules) { // webpackBootstrap
                   return false;
                 }
                 canIgnoreNode(node) {
-                  node = node.parentNode;
                   while (node instanceof Element) {
                     if (this.isSpecificTag(node, this.ignoredTags) || this.isContentEditable(node)) {
                       return true;
