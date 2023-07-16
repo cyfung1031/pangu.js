@@ -192,6 +192,7 @@ return /******/ (function(modules) { // webpackBootstrap
               const QA_ADD_SPACE = new RegExp(`([${CJK}])(['"“”‘’(){}\\[\\]])([^'"“”‘’(){}\\[\\]]+)(['"“”‘’(){}\\[\\]])([${CMB2}])`)
               const QA_ADD_SPACE_2 = new RegExp(`([${CJK}])(['"“”‘’(){}\\[\\]])([a-zA-Z0-9.,]+)(['"“”‘’(){}\\[\\]])([${CJK}])`)
 
+              const M_ADD_SPACE_4 = new RegExp(`([${CJK}${CMB}]\\x20\d+\\x20[${CJK}])(\\d+)`, 'g')
 
               function loopReplace(text, search, replacement) {
                 let maxN = Math.round(text.length / 2) + 4;
@@ -284,6 +285,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
                 if (nLen >= 3) newText = loopReplace(newText, M_ADD_SPACE_2, '$1$2 $3');
                 if (nLen >= 3) newText = loopReplace(newText, M_ADD_SPACE_3, '$1 $2$3');
+                if (nLen >= 4) newText = loopReplace(newText, M_ADD_SPACE_4, '$1 $2');
 
                 if (nLen >= 3) newText = loopReplace(newText, M_COV_SYMBOL, (_, a, b, c) => {
 
