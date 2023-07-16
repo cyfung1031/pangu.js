@@ -192,7 +192,7 @@ return /******/ (function(modules) { // webpackBootstrap
               const QA_ADD_SPACE = new RegExp(`([${CJK}])(['"“”‘’(){}\\[\\]])([^'"“”‘’(){}\\[\\]]+)(['"“”‘’(){}\\[\\]])([${CMB2}])`)
               const QA_ADD_SPACE_2 = new RegExp(`([${CJK}])(['"“”‘’(){}\\[\\]])([a-zA-Z0-9.,]+)(['"“”‘’(){}\\[\\]])([${CJK}])`)
 
-              const M_ADD_SPACE_4 = new RegExp(`([${CJK}${CMB}]\\x20\\d+\\x20[${CJK}])(\\d+)`, 'g')
+              const M_ADD_SPACE_4 = new RegExp(`([${CJK}${CMB}]\\x20\\d+\\x20[${CJK}])(\\d+)`, 'g') // to be reviewed; 将火药用棉布包裹起来，用铁板夹住，以 60 至120Kgf/cm2的速度挤压，以增加比重密度。
 
               function loopReplace(text, search, replacement) {
                 let maxN = Math.round(text.length / 2) + 4;
