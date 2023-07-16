@@ -126,40 +126,38 @@ return /******/ (function(modules) { // webpackBootstrap
 
             let WebPangu = function () {
 
-              const NO_BACKWARD_MATCHING = true; // BACKWARD_MATCHING TO BE CONFIRMED
-
               const CJK = "\u2E80-\u2EFF\u2F00-\u2FDF\u3040-\u309F\u30A0-\u30FA\u30FC-\u30FF\u3100-\u312F\u3200-\u32FF\u3400-\u4DBF\u4E00-\u9FFF\uF900-\uFAFF";
               const ANY_CJK = new RegExp("[" + CJK + "]");
-              const CONVERT_TO_FULLWIDTH_CJK_SYMBOLS_CJK = new RegExp("([" + CJK + "])[ ]*([\\:]+|\\.)[ ]*([" + CJK + "])", 'g');
-              const CONVERT_TO_FULLWIDTH_CJK_SYMBOLS = new RegExp("([" + CJK + "])[ ]*([~\\!;,\\?]+)[ ]*", 'g');
-              const DOTS_CJK = new RegExp("([\\.]{2,}|\u2026)([" + CJK + "])", 'g');
-              const FIX_CJK_COLON_ANS = new RegExp("([" + CJK + "])\\:([A-Z0-9\\(\\)])", 'g');
-              const CJK_QUOTE = new RegExp("([" + CJK + "])([`\"\u05F4])", 'g');
-              const QUOTE_CJK = new RegExp("([`\"\u05F4])([" + CJK + "])", 'g');
-              const FIX_QUOTE_ANY_QUOTE = /([`"\u05f4]+)[ ]*(.+?)[ ]*([`"\u05f4]+)/g;
-              const CJK_SINGLE_QUOTE_BUT_POSSESSIVE = new RegExp("([" + CJK + "])('[^s])", 'g');
-              const SINGLE_QUOTE_CJK = new RegExp("(')([" + CJK + "])", 'g');
-              const FIX_POSSESSIVE_SINGLE_QUOTE = new RegExp("([A-Za-z0-9" + CJK + "])( )('s)", 'g');
-              const HASH_ANS_CJK_HASH = new RegExp("([" + CJK + "])(#)([" + CJK + "]+)(#)([" + CJK + "])", 'g');
-              const CJK_HASH = new RegExp("([" + CJK + "])(#([^ ]))", 'g');
-              const HASH_CJK = new RegExp("(([^ ])#)([" + CJK + "])", 'g');
-              const CJK_OPERATOR_ANS = new RegExp("([" + CJK + "])([\\+\\-\\*\\/=&\\|<>])([A-Za-z0-9])", 'g');
-              const ANS_OPERATOR_CJK = new RegExp("([A-Za-z0-9])([\\+\\-\\*\\/=&\\|<>])([" + CJK + "])", 'g');
-              const FIX_SLASH_AS = /([/]) ([a-z\-_\./]+)/g;
-              const FIX_SLASH_AS_SLASH = /([/\.])([A-Za-z\-_\./]+) ([/])/g;
-              const CJK_LEFT_BRACKET = new RegExp("([" + CJK + "])([\\(\\[\\{<>\u201C])", 'g');
-              const RIGHT_BRACKET_CJK = new RegExp("([\\)\\]\\}<>\u201D])([" + CJK + "])", 'g');
-              const FIX_LEFT_BRACKET_ANY_RIGHT_BRACKET = /([\(\[\{<\u201c]+)[ ]*(.+?)[ ]*([\)\]\}>\u201d]+)/;
-              const ANS_CJK_LEFT_BRACKET_ANY_RIGHT_BRACKET = new RegExp("([A-Za-z0-9" + CJK + "])[ ]*([\u201C])([A-Za-z0-9" + CJK + "\\-_ ]+)([\u201D])", 'g');
-              const LEFT_BRACKET_ANY_RIGHT_BRACKET_ANS_CJK = new RegExp("([\u201C])([A-Za-z0-9" + CJK + "\\-_ ]+)([\u201D])[ ]*([A-Za-z0-9" + CJK + "])", 'g');
-              const AN_LEFT_BRACKET = /([A-Za-z0-9])([\(\[\{])/g;
-              const RIGHT_BRACKET_AN = /([\)\]\}])([A-Za-z0-9])/g;
-              const CJK_ANS = new RegExp("([" + CJK + "])([A-Za-z\u0370-\u03FF0-9@\\$%\\^&\\*\\-\\+\\\\=\\|/\xA1-\xFF\u2150-\u218F\u2700\u2014\u27BF])", 'g');
-              const ANS_CJK = new RegExp("([A-Za-z\u0370-\u03FF0-9~\\$%\\^&\\*\\-\\+\\\\=\\|/!;:,\\.\\?\xA1-\xFF\u2150-\u218F\u2700\u2014\u27BF])([" + CJK + "])", 'g');
-              const S_A = /(%)([A-Za-z])/g;
-              const MIDDLE_DOT = /([ ]*)([\u00b7\u2022\u2027])([ ]*)/g;
+              // const CONVERT_TO_FULLWIDTH_CJK_SYMBOLS_CJK = new RegExp("([" + CJK + "])[ ]*([\\:]+|\\.)[ ]*([" + CJK + "])", 'g');
+              // const CONVERT_TO_FULLWIDTH_CJK_SYMBOLS = new RegExp("([" + CJK + "])[ ]*([~\\!;,\\?]+)[ ]*", 'g');
+              // const DOTS_CJK = new RegExp("([\\.]{2,}|\u2026)([" + CJK + "])", 'g');
+              // const FIX_CJK_COLON_ANS = new RegExp("([" + CJK + "])\\:([A-Z0-9\\(\\)])", 'g');
+              // const CJK_QUOTE = new RegExp("([" + CJK + "])([`\"\u05F4])", 'g');
+              // const QUOTE_CJK = new RegExp("([`\"\u05F4])([" + CJK + "])", 'g');
+              // const FIX_QUOTE_ANY_QUOTE = /([`"\u05f4]+)[ ]*(.+?)[ ]*([`"\u05f4]+)/g;
+              // const CJK_SINGLE_QUOTE_BUT_POSSESSIVE = new RegExp("([" + CJK + "])('[^s])", 'g');
+              // const SINGLE_QUOTE_CJK = new RegExp("(')([" + CJK + "])", 'g');
+              // const FIX_POSSESSIVE_SINGLE_QUOTE = new RegExp("([A-Za-z0-9" + CJK + "])( )('s)", 'g');
+              // const HASH_ANS_CJK_HASH = new RegExp("([" + CJK + "])(#)([" + CJK + "]+)(#)([" + CJK + "])", 'g');
+              // const CJK_HASH = new RegExp("([" + CJK + "])(#([^ ]))", 'g');
+              // const HASH_CJK = new RegExp("(([^ ])#)([" + CJK + "])", 'g');
+              // const CJK_OPERATOR_ANS = new RegExp("([" + CJK + "])([\\+\\-\\*\\/=&\\|<>])([A-Za-z0-9])", 'g');
+              // const ANS_OPERATOR_CJK = new RegExp("([A-Za-z0-9])([\\+\\-\\*\\/=&\\|<>])([" + CJK + "])", 'g');
+              // const FIX_SLASH_AS = /([/]) ([a-z\-_\./]+)/g;
+              // const FIX_SLASH_AS_SLASH = /([/\.])([A-Za-z\-_\./]+) ([/])/g;
+              // const CJK_LEFT_BRACKET = new RegExp("([" + CJK + "])([\\(\\[\\{<>\u201C])", 'g');
+              // const RIGHT_BRACKET_CJK = new RegExp("([\\)\\]\\}<>\u201D])([" + CJK + "])", 'g');
+              // const FIX_LEFT_BRACKET_ANY_RIGHT_BRACKET = /([\(\[\{<\u201c]+)[ ]*(.+?)[ ]*([\)\]\}>\u201d]+)/;
+              // const ANS_CJK_LEFT_BRACKET_ANY_RIGHT_BRACKET = new RegExp("([A-Za-z0-9" + CJK + "])[ ]*([\u201C])([A-Za-z0-9" + CJK + "\\-_ ]+)([\u201D])", 'g');
+              // const LEFT_BRACKET_ANY_RIGHT_BRACKET_ANS_CJK = new RegExp("([\u201C])([A-Za-z0-9" + CJK + "\\-_ ]+)([\u201D])[ ]*([A-Za-z0-9" + CJK + "])", 'g');
+              // const AN_LEFT_BRACKET = /([A-Za-z0-9])([\(\[\{])/g;
+              // const RIGHT_BRACKET_AN = /([\)\]\}])([A-Za-z0-9])/g;
+              // const CJK_ANS = new RegExp("([" + CJK + "])([A-Za-z\u0370-\u03FF0-9@\\$%\\^&\\*\\-\\+\\\\=\\|/\xA1-\xFF\u2150-\u218F\u2700\u2014\u27BF])", 'g');
+              // const ANS_CJK = new RegExp("([A-Za-z\u0370-\u03FF0-9~\\$%\\^&\\*\\-\\+\\\\=\\|/!;:,\\.\\?\xA1-\xFF\u2150-\u218F\u2700\u2014\u27BF])([" + CJK + "])", 'g');
+              // const S_A = /(%)([A-Za-z])/g;
+              // const MIDDLE_DOT = /([ ]*)([\u00b7\u2022\u2027])([ ]*)/g;
 
-              const M_ADD_SPACE = new RegExp(`([${CJK}])([a-zA-Z0-9]+|[a-zA-Z0-9]+[\\x20-\\xFF]+[a-zA-Z0-9]+|[a-zA-Z0-9][a-zA-Z0-9.,]*[a-zA-Z0-9][%°]|[a-zA-Z0-9][%°])([${CJK}])`, 'g')
+              const M_ADD_SPACE = new RegExp(`([${CJK}])([a-zA-Z0-9]+|[a-zA-Z0-9]+[\\x20-\\xFF]+[a-zA-Z0-9]+|[a-zA-Z0-9][a-zA-Z0-9.,]*[a-zA-Z0-9][%°]|[a-zA-Z0-9][%°]|[a-zA-Z0-9][a-zA-Z0-9\/,.]+[a-zA-Z0-9])([${CJK}])`, 'g')
               const P_ADD_SPACE = new RegExp(`(^|[\\r\\n])([a-zA-Z0-9]+|[a-zA-Z0-9]+[\\x20-\\xFF]+[a-zA-Z0-9]+)([${CJK}])`, 'g')
               const S_ADD_SPACE = new RegExp(`([${CJK}])([a-zA-Z0-9]+|[a-zA-Z0-9]+[\\x20-\\xFF]+[a-zA-Z0-9]+)([\\r\\n]|$)`, 'g')
 
@@ -277,7 +275,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
                 const nLen = text.length;
-                if (nLen <= 1) return text; 
+                if (nLen <= 1) return text;
 
                 if (nLen >= 3) newText = loopReplace(newText, M_ADD_SPACE, '$1 $2 $3');
                 newText = loopReplace(newText, P_ADD_SPACE, '$1$2 $3');
@@ -345,16 +343,6 @@ return /******/ (function(modules) { // webpackBootstrap
 
               }
 
-              function firstChar(s) {
-                if (s.length === 0) return '\x00';
-                return s.charAt(0);
-              }
-
-              function lastChar(s) {
-                if (s.length === 0) return '\x00';
-                return s.charAt(s.length - 1);
-              }
-
               function anyPossibleCJK(s) {
                 for (let i = 0, l = s.length; i < l; i++) {
                   if (s[i] >= '\u2E80') return true;
@@ -362,51 +350,226 @@ return /******/ (function(modules) { // webpackBootstrap
                 return false;
               }
 
+              function anyPossibleCJK_(s, a, b) {
+                for (let i = a; i < b; i++) {
+                  if (s[i] >= '\u2E80') return true;
+                }
+                return false;
+              }
+
+              function trimTextStart(s) {
+                // "  ab cd ef  " => ["  ab", " cd ef  "]
+                if (typeof s !== 'string') return [s, ""];
+                if (!s.length) return ["", ""];
+                let j = 0;
+                for (let i = 0; i < s.length; i++) {
+                  if (s[i] === ' ') j = i + 1;
+                  else break;
+                }
+                let idx1 = s.indexOf(' ', j);
+                if (idx1 < 0) return [s, ""];
+                return [`${s.substring(0, idx1)}`, `${s.substring(idx1)}`];
+              }
+
+              function trimTextEnd(s) {
+                // "  ab cd ef  " => ["  ab cd ", "ef  "]
+                if (typeof s !== 'string') return ["", s];
+                if (!s.length) return ["", ""];
+                let j = s.length;
+                for (let i = s.length - 1; i >= 0; i--) {
+                  if (s[i] === ' ') j = i;
+                  else break;
+                }
+                let idx2 = s.lastIndexOf(' ', j - 1);
+                if (idx2 < 0) return ["", s];
+                return [`${s.substring(0, idx2 + 1)}`, `${s.substring(idx2 + 1)}`];
+              }
+
               function trimTextMiddle(s) {
                 if (typeof s !== 'string') return s;
-                let idx1 = s.indexOf(' ');
+
+                if (!s.length) return s;
+
+                let j1 = 0;
+                for (let i = 0; i < s.length; i++) {
+                  if (s[i] === ' ') j1 = i + 1;
+                  else break;
+                }
+
+
+                let j2 = s.length;
+                for (let i = s.length - 1; i >= 0; i--) {
+                  if (s[i] === ' ') j2 = i;
+                  else break;
+                }
+
+                let idx1 = s.indexOf(' ', j1);
                 if (idx1 < 0) return s;
-                let idx2 = s.lastIndexOf(' ');
+                if (idx1 >= j2) return s;
+                let idx2 = s.substring(0, j2).lastIndexOf(' ');
+                if (idx2 < idx1) return s;
                 return `${s.substring(0, idx1)} ${s.substring(idx2 + 1)}`;
               }
 
               const weakSet = new WeakSet();
 
+              /** 
+               * @param {Node} node
+               */
+              function extract(node) {
+                if (node.previousSibling === null && node.nextSibling === null) {
+                  node = node.parentNode;
+                }
+                let prevNode = node.previousSibling;
+                let nextNode = node.nextSibling;
+                return { prevNode, nextNode, middleNode: node }
+              }
+
+
+              function getText(node) {
+
+                let textNode = null;
+                if (node instanceof Element) {
+                  if (node.firstChild === node.lastChild) textNode = node;
+                } else {
+                  textNode = node;
+                }
+                textNode = textNode instanceof Text ? textNode : null;
+                return textNode;
+              }
+
+
+              const skipExecutor = [
+                'HTML', 'BODY', 'HEAD', 'META', 'SCRIPT', 'STYLE', 'LINK', 'TITLE', 'BASE',
+                'DIV', 'P', 'UL', 'OL',
+                'BR', 'HR', 'SELECT',
+                'VIDEO', 'AUDIO', 'IFRAME', 'EMBED', 'DIALOG',
+                'LI',
+                'TEXTAREA', 'PRE', 'BLOCKQUOTE', 'INPUT', 'FORM',
+                'SVG', 'PATH', 'SHAPE', 'SOLID', 'SLOT', 'SOURCE',
+                'MAIN', 'ARTICLE', 'FOOTER', 'HEADER', 'MENU',
+                'H1', 'H2', 'H3', 'H4', 'H5', 'H6',
+                'TBODY', 'TR', 'TD', 'TFOOT', 'TH', 'THEAD',
+                'SUP', 'SUB',
+                'DD', 'DT', 'DL', 'MARK', 'RP', 'RT'
+              ];
+
+
+              function executor(node, spacing, adjSet) {
+
+                if (!node) return;
+                if (adjSet.has(node)) return;
+                adjSet.add(node);
+
+                const elementNode = node.nodeType === 1 ? node : node.parentNode;
+                if (!(elementNode instanceof Element)) return;
+
+                if (skipExecutor.includes(elementNode.nodeName)) return;
+
+                const prevNode = node.previousSibling;
+                const nextNode = node.nextSibling;
+
+                const middTextNode = getText(node);
+                const prevTextNode = getText(prevNode);
+                const nextTextNode = getText(nextNode);
+
+                if ((prevTextNode || nextTextNode)) {
+
+                  let prevTextNodeNewText = null;
+                  let middTextNodeNewText = null;
+                  let nextTextNodeNewText = null;
+                  if (prevTextNode && !this.isIgnored(prevTextNode.parentNode)) prevTextNodeNewText = spacing(prevTextNode.data);
+                  if (middTextNode && elementNode === middTextNode.parentNode && !this.isIgnored(elementNode)) middTextNodeNewText = spacing(middTextNode.data);
+                  if (nextTextNode && !this.isIgnored(nextTextNode.parentNode)) nextTextNodeNewText = spacing(nextTextNode.data);
+
+                  const textMiddle = trimTextMiddle(!middTextNode ? (node ? node.textContent : '') : (middTextNodeNewText || middTextNode.data));
+
+                  if (textMiddle) {
+
+                    const [textPrevTr, textPrev] = trimTextEnd(!prevTextNode ? (prevNode ? prevNode.textContent : '') : (prevTextNodeNewText || prevTextNode.data));
+                    const [textNext, textNextTr] = trimTextStart(!nextTextNode ? (nextNode ? nextNode.textContent : '') : (nextTextNodeNewText || nextTextNode.data));
+
+                    const testRes = this.spacing(textPrev + textMiddle + textNext);
+
+                    if (testRes) {
+
+                      if (textPrev && prevTextNode) {
+                        const tz = textPrev.trim();
+                        let targetLen = tz.length;
+                        if (targetLen > 0) {
+                          let z = 0;
+                          for (let k = 0; k < testRes.length; k++) {
+                            if (testRes[k] !== ' ') {
+                              z++;
+                              if (z === targetLen) {
+                                const base = testRes.substring(0, k + 1);
+                                if (base.replace(/\x20/g, '') === tz) {
+                                  const space = testRes[k + 1] === ' ' && !textMiddle.startsWith(' ') && !textPrev.endsWith(' ');
+                                  prevTextNodeNewText = textPrevTr + base + (space ? ' ' : '');
+                                }
+                                break;
+                              }
+                            }
+                          }
+                        }
+                      }
+
+                      if (textNext && nextTextNode) {
+                        const tz = textNext.trim();
+                        let targetLen = tz.length;
+                        if (targetLen > 0) {
+                          let z = 0;
+                          for (let k = testRes.length - 1; k >= 0; k--) {
+                            if (testRes[k] !== ' ') {
+                              z++;
+                              if (z === targetLen) {
+                                const base = testRes.substring(k);
+                                if (base.replace(/\x20/g, '') === tz) {
+                                  const space = (k >= 1 && testRes[k - 1] === ' ' && !textMiddle.endsWith(' ') && !textNext.startsWith(' '));
+                                  nextTextNodeNewText = (space ? ' ' : '') + base + textNextTr;
+                                }
+                                break;
+                              }
+                            }
+                          }
+                        }
+                      }
+
+                    }
+
+                  }
+
+
+                  if (prevTextNodeNewText) prevTextNode.data = prevTextNodeNewText;
+                  if (middTextNodeNewText) middTextNode.data = middTextNodeNewText;
+                  if (nextTextNodeNewText) nextTextNode.data = nextTextNodeNewText;
+                }
+
+
+              }
+
               class WebPangu {
                 constructor() {
-                  this.blockTags = ["DIV", "P", "H1", "H2", "H3", "H4", "H5", "H6"];
+                  // this.blockTags = ["DIV", "P", "H1", "H2", "H3", "H4", "H5", "H6"];
                   this.ignoredTags = ["SCRIPT", "STYLE", "TEXTAREA", "PRE", "SVG", "CODE"];
-                  this.presentationalTags = ["B", "CODE", "DEL", "EM", "I", "S", "STRONG", "KBD", "U", "INS"];
-                  this.spaceLikeTags = ["BR", "HR", "I", "IMG", "PANGU"];
-                  this.spaceSensitiveTags = ["A", "DEL", "PRE", "S", "STRIKE", "U"];
-                }                
-                isContentEditable(node) {
-                  return node.isContentEditable || node.getAttribute && node.getAttribute('g_editable') === 'true';
-                }
-                isSpecificTag(node, tagArray) {
-                  return node && node.nodeName && tagArray.includes(node.nodeName);
-                }
-                isInsideSpecificTag(node, tagArray) {
-                  while ((node = node.parentNode) instanceof Element) {
-                    if (this.isSpecificTag(node, tagArray)) {
-                      return true;
-                    }
+                  // this.presentationalTags = ["B", "CODE", "DEL", "EM", "I", "S", "STRONG", "KBD", "U", "INS"];
+                  // this.spaceLikeTags = ["BR", "HR", "I", "IMG", "PANGU"];
+                  // this.spaceSensitiveTags = ["A", "DEL", "PRE", "S", "STRIKE", "U"];
+
+                  const xPathQueryArr = ['/html/body//*//text()[normalize-space(.)]'];
+                  for (const tag of ['script', 'style', 'textarea', 'pre', 'svg']) {
+                    xPathQueryArr.push(`[translate(name(..),"${tag.toUpperCase()}","${tag.toLowerCase()}")!="${tag}"]`);
                   }
-                  return false;
+                  const xPathQuery = xPathQueryArr.join('');
+
+                  this.bodyXpath = xPathQuery;
                 }
-                isPresentationElementNode(node) {
-                  if (typeof (node || 0).nodeName !== 'string') return false;
-                  if (node.firstChild !== node.lastChild) return false;
-                  if (node.nodeName === "CODE") {
-                    return node.textContent.search(/[\r\n]/) < 0
-                  }
-                  return this.isSpecificTag(node, this.presentationalTags);
+                isIgnored(node) {
+                  return node instanceof HTMLElement && (this.ignoredTags.includes(node.nodeName) || node.isContentEditable || node.getAttribute('g_editable') === 'true');
                 }
                 canIgnoreNode(node) {
-                  while (node instanceof Element) {
-                    if (this.isSpecificTag(node, this.ignoredTags) || this.isContentEditable(node)) {
-                      return true;
-                    }
+                  while (node instanceof HTMLElement) {
+                    if (this.isIgnored(node)) return true;
                     node = node.parentNode;
                   }
                   return false;
@@ -427,179 +590,110 @@ return /******/ (function(modules) { // webpackBootstrap
                   }
                   return false;
                 }
-                spacingNodeByXPath(xPathQuery, contextNode) {
-                  if (!(contextNode instanceof Node) || contextNode instanceof DocumentFragment) {
-                    return;
+                spacingNodeByXPathSnapShots(...snapshots) {
+
+
+                  const strCache = new Map();
+                  const adjSet = new WeakSet();
+
+                  const spacing = (s) => {
+
+                    let j1 = 0;
+                    for (let i = 0; i < s.length; i++) {
+                      if (s[i] === ' ') j1 = i + 1;
+                      else break;
+                    }
+
+                    let j2 = s.length;
+                    for (let i = s.length - 1; i >= 0; i--) {
+                      if (s[i] === ' ') j2 = i;
+                      else break;
+                    }
+
+                    if (j1 === j2) return null;
+                    if (!anyPossibleCJK_(s, j1, j2)) return null;
+
+                    let trimmed = s.substring(j1, j2);
+
+                    let r = strCache.get(trimmed);
+
+                    if (r === undefined) {
+                      r = this.spacing(trimmed);
+                      strCache.set(trimmed, r);
+                      if (r !== null) strCache.set(r, r);
+                    }
+                    return r ? s.substring(0, j1) + r + s.substring(j2) : null;
+
                   }
 
-                  const document = contextNode.ownerDocument || contextNode;
 
-                  if (!(document instanceof Document)) {
-                    return;
-                  }
+                  const snapshotsLen = snapshots.length;
 
-                  const textNodes = document.evaluate(xPathQuery, contextNode, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null);
-                  let tNextTextNode;
+                  for (let si = 0; si < snapshotsLen; si++) {
+                    const snapshot = snapshots[si];
+                    for (let sj = 0, shLen = snapshot.snapshotLength; sj < shLen; sj++) {
 
-                  const cache = new Map();
+                      const currentTextNode = snapshot.snapshotItem(sj);
 
-                  const spacing = (contents) => {
+                      if (!(currentTextNode instanceof Text)) continue;
+                      if (weakSet.has(currentTextNode)) continue;
+                      weakSet.add(currentTextNode);
 
-                    if (!anyPossibleCJK(contents)) null;
+                      const currentTextNodeData = currentTextNode.data;
 
-                    let r = cache.get(contents);
-                    if (r !== undefined) return r;
-                    r = this.spacing(contents);
-                    cache.set(contents, r);
+                      if (!anyPossibleCJK(currentTextNodeData)) continue;
 
-                    if (r !== null) {
-                      cache.set(r, r);
-                    }
-                    return r;
-                  }
+                      const elementNode = currentTextNode.parentNode;
 
-                  for (let i = textNodes.snapshotLength; --i >= 0;) {
-                    const currentTextNode = textNodes.snapshotItem(i);
-                    if (!(currentTextNode instanceof Text)) continue;
-                    const sNextTextNode = tNextTextNode;
-                    tNextTextNode = currentTextNode;
-                    if (weakSet.has(currentTextNode)) continue;
-
-                    weakSet.add(currentTextNode);
-                    const currentTextNodeData = currentTextNode.data;
-
-                    const elementNode = currentTextNode.parentNode;
-
-                    const isPresentationNode = this.isPresentationElementNode(elementNode);
-
-                    let ignoreMode = !this.canIgnoreNode(elementNode) ? 0 : !isPresentationNode ? 1 : 2;
-                    // 0 - span, b
-                    // 1 - pre, textarea
-                    // 2 - code
-
-                    let currentTextNodeNewText = null;
-                    if (ignoreMode === 0) {
-                      currentTextNodeNewText = spacing(currentTextNodeData);
-                      if (currentTextNodeNewText !== null) {
-                        currentTextNode.data = currentTextNodeNewText;
-                      }
-                    }
-
-                    let prevTextNode = null;
-                    let nextTextNode = null;
-
-                    if (isPresentationNode) {
-
-                      const previousSibling = elementNode.previousSibling;
-                      if (previousSibling instanceof Text) prevTextNode = previousSibling;
-
-                      const nextSibling = elementNode.nextSibling;
-                      if (nextSibling instanceof Text) nextTextNode = nextSibling;
-
-                    }
-
-                    if ((prevTextNode || nextTextNode) && (ignoreMode === 0 ? true : !this.canIgnoreNode(elementNode.parentNode))) {
-
-                      let prevTextNodeNewText = null;
-                      let nextTextNodeNewText = null;
-                      if (prevTextNode) prevTextNodeNewText = spacing(prevTextNode.data);
-                      if (nextTextNode) nextTextNodeNewText = spacing(nextTextNode.data);
-
-                      const textPrev = !prevTextNode ? '' : prevTextNodeNewText || prevTextNode.data;
-                      const textNext = !nextTextNode ? '' : nextTextNodeNewText || nextTextNode.data;
-                      const textMiddle = trimTextMiddle(currentTextNodeNewText || currentTextNode.data);
-
-                      const testRes = this.spacing(textPrev + textMiddle + textNext);
-
-                      if (testRes) {
-                        if (textPrev && testRes.startsWith(textPrev + ' ' + textMiddle)) prevTextNodeNewText = textPrev + ' ';
-                        if (textNext && testRes.endsWith(textMiddle + ' ' + textNext)) nextTextNodeNewText = ' ' + textNext;
-                      }
-
-                      if (prevTextNodeNewText) prevTextNode.data = prevTextNodeNewText;
-                      if (nextTextNodeNewText) nextTextNode.data = nextTextNodeNewText;
-                    }
-
-                    if (ignoreMode === 0 && sNextTextNode instanceof Text) {
-                      if ((currentTextNode.nextSibling instanceof Element) && this.spaceLikeTags.includes(currentTextNode.nextSibling.nodeName)) {
-                        continue;
-                      }
-
-                      const testRes = NO_BACKWARD_MATCHING ? null : this.spacing(lastChar(currentTextNode.data) + firstChar(sNextTextNode.data));
-
-                      if (testRes !== null) {
-
-                        let currentNode = currentTextNode;
-
-                        while ((currentNode.parentNode instanceof Element) && !this.spaceSensitiveTags.includes(currentNode.nodeName) && this.isLastTextChild(currentNode.parentNode, currentNode)) {
-                          currentNode = currentNode.parentNode;
-                        }
-
-                        if ((currentNode.nextSibling instanceof Element) && this.spaceLikeTags.includes(currentNode.nextSibling.nodeName)) {
-                          continue;
-                        }
-
-                        if (!this.blockTags.includes(currentNode.nodeName)) {
-
-                          let nextNode = sNextTextNode;
-
-                          while ((nextNode.parentNode instanceof Element) && !this.spaceSensitiveTags.includes(nextNode.nodeName) && this.isFirstTextChild(nextNode.parentNode, nextNode)) {
-                            nextNode = nextNode.parentNode;
-                          }
-
-                          if (!this.spaceSensitiveTags.includes(nextNode.nodeName)) {
-                            if (!this.ignoredTags.includes(nextNode.nodeName) && !this.blockTags.includes(nextNode.nodeName)) {
-                              const b = sNextTextNode.previousSibling
-                                ? !this.spaceLikeTags.includes(sNextTextNode.previousSibling.nodeName)
-                                : !this.canIgnoreNode(sNextTextNode.parentElement);
-                              if (b) {
-                                sNextTextNode.data = " " + sNextTextNode.data;
-                              }
-                            }
-                          } else if (!this.spaceSensitiveTags.includes(currentNode.nodeName)) {
-                            currentTextNode.data = "" + currentTextNode.data + " ";
-                          } else {
-                            const panguSpace = document.createElement('pangu');
-                            panguSpace.appendChild(document.createTextNode(' '));
-
-                            const b = !(nextNode.previousSibling instanceof Node) || !this.spaceLikeTags.includes(nextNode.previousSibling.nodeName);
-
-                            if (b && nextNode.previousElementSibling !== null) {
-                              nextNode.parentNode.insertBefore(panguSpace, nextNode);
-                            }
-
-                          }
+                      let currentTextNodeNewText = null;
+                      if (!this.canIgnoreNode(elementNode)) {
+                        currentTextNodeNewText = spacing(currentTextNodeData);
+                        if (currentTextNodeNewText !== null) {
+                          currentTextNode.data = currentTextNodeNewText;
                         }
                       }
+
+                      const { prevNode, nextNode, middleNode } = extract(currentTextNode);
+
+                      const eitherSibling = prevNode || nextNode;
+                      if (eitherSibling && !this.canIgnoreNode(eitherSibling.parentNode) && eitherSibling.parentNode instanceof HTMLElement) {
+                        executor.call(this, middleNode, spacing, adjSet);
+                        executor.call(this, prevNode, spacing, adjSet);
+                        executor.call(this, nextNode, spacing, adjSet);
+                      }
+
                     }
                   }
+
+
+
                 }
                 spacingNode(contextNode) {
-                  const xPathQuery = contextNode.firstElementChild === null ? './/text()[normalize-space(.)]' : './/*/text()[normalize-space(.)]';
-                  this.spacingNodeByXPath(xPathQuery, contextNode);
+                  if (!(contextNode instanceof Node) || contextNode instanceof DocumentFragment) return;
+                  const document = contextNode.ownerDocument;
+                  if (!(document instanceof Document)) return;
+                  const xPathQuery = contextNode.firstElementChild === null ? './/text()[normalize-space(.)]' : './/*//text()[normalize-space(.)]';
+                  const snapshot = document.evaluate(xPathQuery, contextNode, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null);
+                  this.spacingNodeByXPathSnapShots(snapshot);
                 }
                 spacingPageTitle() {
                   const xPathQuery = '/html/head/title/text()';
-                  this.spacingNodeByXPath(xPathQuery, document);
+                  const snapshot = document.evaluate(xPathQuery, document, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null);
+                  this.spacingNodeByXPathSnapShots(snapshot);
                 }
                 spacingPageBody() {
-                  const xPathQueryArr = ['/html/body//*/text()[normalize-space(.)]'];
-                  for (const tag of ['script', 'style', 'textarea', 'pre', 'svg']) {
-                    xPathQueryArr.push(`[translate(name(..),"${tag.toUpperCase()}","${tag.toLowerCase()}")!="${tag}"]`);
-                  }
-                  const xPathQuery = xPathQueryArr.join('');
-                  this.spacingNodeByXPath(xPathQuery, document);
+                  const snapshot1 = document.evaluate('/html/body//text()[normalize-space(.)]', document, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null);
+                  const snapshot2 = document.evaluate(this.bodyXpath, document, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null);
+                  this.spacingNodeByXPathSnapShots(snapshot1, snapshot2);
                 }
                 spacing(text) {
                   if (typeof text !== 'string') {
                     console.warn("spacing(text) only accepts string but got " + _typeof(text));
                     return null;
                   }
-
                   if (text.length <= 1 || !ANY_CJK.test(text)) {
                     return null;
                   }
-
                   const nText = replacerM(text);
                   if (nText === text) return null;
                   return nText;
