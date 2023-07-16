@@ -360,6 +360,14 @@ return /******/ (function(modules) { // webpackBootstrap
                 return false;
               }
 
+              function trimTextMiddle(s) {
+                if (typeof s !== 'string') return s;
+                let idx1 = s.indexOf(' ');
+                if (idx1 < 0) return s;
+                let idx2 = s.lastIndexOf(' ');
+                return `${s.substring(0, idx1)} ${s.substring(idx2 + 1)}`;
+              }
+
               const weakSet = new WeakSet();
 
               class WebPangu {
@@ -383,6 +391,14 @@ return /******/ (function(modules) { // webpackBootstrap
                     }
                   }
                   return false;
+                }
+                isPresentationElementNode(node) {
+                  if (typeof (node || 0).nodeName !== 'string') return false;
+                  if (node.firstChild !== node.lastChild) return false;
+                  if (node.nodeName === "CODE") {
+                    return node.textContent.search(/[\r\n]/) < 0
+                  }
+                  return this.isSpecificTag(node, this.presentationalTags);
                 }
                 canIgnoreNode(node) {
                   while (node instanceof Element) {
@@ -427,6 +443,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
                   const spacing = (contents) => {
 
+                    if (!anyPossibleCJK(contents)) null;
 
                     let r = cache.get(contents);
                     if (r !== undefined) return r;
@@ -448,21 +465,28 @@ return /******/ (function(modules) { // webpackBootstrap
 
                     weakSet.add(currentTextNode);
                     const currentTextNodeData = currentTextNode.data;
-                    if (!anyPossibleCJK(currentTextNodeData)) continue;
 
                     const elementNode = currentTextNode.parentNode;
 
-                    if (this.canIgnoreNode(elementNode)) continue;
+                    const isPresentationNode = this.isPresentationElementNode(elementNode);
 
-                    const currentTextNodeNewText = spacing(currentTextNodeData);
-                    if (currentTextNodeNewText !== null) {
-                      currentTextNode.data = currentTextNodeNewText;
+                    let ignoreMode = !this.canIgnoreNode(elementNode) ? 0 : !isPresentationNode ? 1 : 2;
+                    // 0 - span, b
+                    // 1 - pre, textarea
+                    // 2 - code
+
+                    let currentTextNodeNewText = null;
+                    if (ignoreMode === 0) {
+                      currentTextNodeNewText = spacing(currentTextNodeData);
+                      if (currentTextNodeNewText !== null) {
+                        currentTextNode.data = currentTextNodeNewText;
+                      }
                     }
 
                     let prevTextNode = null;
                     let nextTextNode = null;
 
-                    if (this.isSpecificTag(elementNode, this.presentationalTags) && !this.isInsideSpecificTag(elementNode, this.ignoredTags)) {
+                    if (isPresentationNode) {
 
                       const previousSibling = elementNode.previousSibling;
                       if (previousSibling instanceof Text) prevTextNode = previousSibling;
@@ -472,7 +496,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
                     }
 
-                    if ((prevTextNode || nextTextNode) && !this.canIgnoreNode(elementNode.parentNode)) {
+                    if ((prevTextNode || nextTextNode) && (ignoreMode === 0 ? true : !this.canIgnoreNode(elementNode.parentNode))) {
 
                       let prevTextNodeNewText = null;
                       let nextTextNodeNewText = null;
@@ -481,7 +505,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
                       const textPrev = !prevTextNode ? '' : prevTextNodeNewText || prevTextNode.data;
                       const textNext = !nextTextNode ? '' : nextTextNodeNewText || nextTextNode.data;
-                      const textMiddle = currentTextNodeNewText || currentTextNode.data;
+                      const textMiddle = trimTextMiddle(currentTextNodeNewText || currentTextNode.data);
 
                       const testRes = this.spacing(textPrev + textMiddle + textNext);
 
@@ -494,7 +518,7 @@ return /******/ (function(modules) { // webpackBootstrap
                       if (nextTextNodeNewText) nextTextNode.data = nextTextNodeNewText;
                     }
 
-                    if (sNextTextNode instanceof Text) {
+                    if (ignoreMode === 0 && sNextTextNode instanceof Text) {
                       if ((currentTextNode.nextSibling instanceof Element) && this.spaceLikeTags.includes(currentTextNode.nextSibling.nodeName)) {
                         continue;
                       }
