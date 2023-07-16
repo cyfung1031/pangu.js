@@ -373,7 +373,7 @@ return /******/ (function(modules) { // webpackBootstrap
               class WebPangu {
                 constructor() {
                   this.blockTags = ["DIV", "P", "H1", "H2", "H3", "H4", "H5", "H6"];
-                  this.ignoredTags = ["SCRIPT", "CODE", "PRE", "TEXTAREA"];
+                  this.ignoredTags = ["SCRIPT", "STYLE", "TEXTAREA", "PRE", "SVG", "CODE"];
                   this.presentationalTags = ["B", "CODE", "DEL", "EM", "I", "S", "STRONG", "KBD", "U", "INS"];
                   this.spaceLikeTags = ["BR", "HR", "I", "IMG", "PANGU"];
                   this.spaceSensitiveTags = ["A", "DEL", "PRE", "S", "STRIKE", "U"];
@@ -582,8 +582,8 @@ return /******/ (function(modules) { // webpackBootstrap
                 }
                 spacingPageBody() {
                   const xPathQueryArr = ['/html/body//*/text()[normalize-space(.)]'];
-                  for (const tag of ['script', 'style', 'textarea']) {
-                    xPathQueryArr.push("[translate(name(..),\"ABCDEFGHIJKLMNOPQRSTUVWXYZ\",\"abcdefghijklmnopqrstuvwxyz\")!=\"" + tag + "\"]");
+                  for (const tag of ['script', 'style', 'textarea', 'pre', 'svg']) {
+                    xPathQueryArr.push(`[translate(name(..),"${tag.toUpperCase()}","${tag.toLowerCase()}")!="${tag}"]`);
                   }
                   const xPathQuery = xPathQueryArr.join('');
                   this.spacingNodeByXPath(xPathQuery, document);
