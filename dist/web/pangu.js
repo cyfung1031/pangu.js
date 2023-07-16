@@ -276,6 +276,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
                 const nLen = text.length;
+                if (nLen <= 1) return text; 
 
                 if (nLen >= 3) newText = loopReplace(newText, M_ADD_SPACE, '$1 $2 $3');
                 newText = loopReplace(newText, P_ADD_SPACE, '$1$2 $3');
@@ -323,6 +324,23 @@ return /******/ (function(modules) { // webpackBootstrap
                 }
 
                 return newText;
+              }
+
+              function replacerM(text) {
+
+                let s = text.split(/([a-z0-9]+\:\/\/[^\s]+)/);
+                if (s.length >= 3) {
+                  for (let i = 0; i < s.length; i++) {
+                    if ((i % 2) === 0) {
+                      let t = s[i];
+                      if (t.length >= 2) s[i] = replacer(t);
+                    }
+                  }
+                  return s.join('');
+                } else {
+                  return replacer(text);
+                }
+
               }
 
               function firstChar(s) {
@@ -557,7 +575,7 @@ return /******/ (function(modules) { // webpackBootstrap
                     return null;
                   }
 
-                  const nText = replacer(text);
+                  const nText = replacerM(text);
                   if (nText === text) return null;
                   return nText;
                 }
