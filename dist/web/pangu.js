@@ -460,7 +460,8 @@ return /******/ (function(modules) { // webpackBootstrap
                 'AREA', 'BASE', 'EMBED', 'COMMAND', 'KEYGEN', 'MENUITEM', 'BASEFONT', 'BGSOUND', 'ISINDEX', 'NEXTID', 'TEMPLATE', 'NOFRAMES',
                 'COL', 'WBR', 'MEDIA', 'FRAME', 'APPLET', 'OBJECT', 'SVG', 'MATH', 'SCRIPT', 'STYLE', 'AUDIO',
 
-                'SLOT', 'DEFINE', 'DIALOG', 'MARK',
+                'SLOT', 'DEFINE', 'DIALOG', 'MARK', 'MAP', 'COLGROUP', 'FIGURE', 'DATALIST',
+                // 'ABBR', 'DATA', 'BUTTON',
 
                 'svg', 'g', 'rect', 'circle', 'ellipse', 'line', 'polyline', 'polygon', 'path', 'text', 'tspan', 'image', 'use',
                 'defs', 'pattern', 'linearGradient', 'radialGradient', 'mask', 'clipPath', 'symbol', 'marker', 'animate', 'filter',
@@ -572,7 +573,21 @@ return /******/ (function(modules) { // webpackBootstrap
               class WebPangu {
                 constructor() {
                   // this.blockTags = ["DIV", "P", "H1", "H2", "H3", "H4", "H5", "H6"];
-                  this.ignoredTags = new Set(["SCRIPT", "STYLE", "TEXTAREA", "PRE", "SVG", "CODE"]);
+                  this.ignoredTags = new Set([
+                    "SCRIPT", "STYLE", "TEXTAREA", "PRE", "SVG", "CODE",
+
+                    'IMG', 'INPUT', 'BR', 'META', 'LINK', 'HR', 'SOURCE', 'TRACK', 'IFRAME', 'VIDEO', 'CANVAS', 'SELECT',
+                    'AREA', 'BASE', 'EMBED', 'COMMAND', 'KEYGEN', 'MENUITEM', 'BASEFONT', 'BGSOUND', 'ISINDEX', 'NEXTID', 'TEMPLATE', 'NOFRAMES',
+                    'COL', 'WBR', 'MEDIA', 'FRAME', 'APPLET', 'OBJECT', 'MATH', 'AUDIO',
+
+                    'SLOT', 'DEFINE', 'DIALOG', 'MARK', 'MAP', 'COLGROUP', 'FIGURE', 'DATALIST',
+                    // 'ABBR', 'DATA', 'BUTTON',
+
+                    'svg', 'g', 'rect', 'circle', 'ellipse', 'line', 'polyline', 'polygon', 'path', 'text', 'tspan', 'image', 'use',
+                    'defs', 'pattern', 'linearGradient', 'radialGradient', 'mask', 'clipPath', 'symbol', 'marker', 'animate', 'filter',
+                    'foreignObject', 'metadata'
+
+                  ]);
                   // this.presentationalTags = ["B", "CODE", "DEL", "EM", "I", "S", "STRONG", "KBD", "U", "INS"];
                   // this.spaceLikeTags = ["BR", "HR", "I", "IMG", "PANGU"];
                   // this.spaceSensitiveTags = ["A", "DEL", "PRE", "S", "STRIKE", "U"];
