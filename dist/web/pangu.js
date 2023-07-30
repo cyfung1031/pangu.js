@@ -439,7 +439,7 @@ return /******/ (function(modules) { // webpackBootstrap
               }
 
 
-              const skipExecutor = [
+              const skipExecutor = new Set([
                 'HTML', 'BODY', 'HEAD', 'META', 'SCRIPT', 'STYLE', 'LINK', 'TITLE', 'BASE',
                 'DIV', 'P', 'UL', 'OL',
                 'BR', 'HR', 'SELECT',
@@ -452,8 +452,29 @@ return /******/ (function(modules) { // webpackBootstrap
                 'TBODY', 'TR', 'TD', 'TFOOT', 'TH', 'THEAD',
                 'SUP', 'SUB',
                 'DD', 'DT', 'DL', 'MARK', 'RP', 'RT'
-              ];
+              ]);
 
+              const tagsNotForContent = new Set([
+
+                'IMG', 'INPUT', 'BR', 'META', 'LINK', 'HR', 'SOURCE', 'TRACK', 'IFRAME', 'VIDEO', 'CANVAS', 'SELECT',
+                'AREA', 'BASE', 'EMBED', 'COMMAND', 'KEYGEN', 'MENUITEM', 'BASEFONT', 'BGSOUND', 'ISINDEX', 'NEXTID', 'TEMPLATE', 'NOFRAMES',
+                'COL', 'WBR', 'MEDIA', 'FRAME', 'APPLET', 'OBJECT', 'SVG', 'MATH', 'SCRIPT', 'STYLE', 'AUDIO',
+
+                'SLOT', 'DEFINE', 'DIALOG', 'MARK',
+
+                'svg', 'g', 'rect', 'circle', 'ellipse', 'line', 'polyline', 'polygon', 'path', 'text', 'tspan', 'image', 'use',
+                'defs', 'pattern', 'linearGradient', 'radialGradient', 'mask', 'clipPath', 'symbol', 'marker', 'animate', 'filter',
+                'foreignObject', 'metadata'
+
+              ]);
+
+              function textContentFn(node) {
+                if (node instanceof HTMLElement) {
+                  if (tagsNotForContent.has(node.nodeName)) return null;
+                  return node.textContent;
+                }
+                return null;
+              }
 
               function executor(node, spacing, adjSet) {
 
@@ -464,7 +485,7 @@ return /******/ (function(modules) { // webpackBootstrap
                 const elementNode = node.nodeType === 1 ? node : node.parentNode;
                 if (!(elementNode instanceof Element)) return;
 
-                if (skipExecutor.includes(elementNode.nodeName)) return;
+                if (skipExecutor.has(elementNode.nodeName)) return;
 
                 const prevNode = node.previousSibling;
                 const nextNode = node.nextSibling;
@@ -482,12 +503,12 @@ return /******/ (function(modules) { // webpackBootstrap
                   if (middTextNode && elementNode === middTextNode.parentNode && !this.isIgnored(elementNode)) middTextNodeNewText = spacing(middTextNode.data);
                   if (nextTextNode && !this.isIgnored(nextTextNode.parentNode)) nextTextNodeNewText = spacing(nextTextNode.data);
 
-                  const textMiddle = trimTextMiddle(!middTextNode ? (node ? node.textContent : '') : (middTextNodeNewText || middTextNode.data));
+                  const textMiddle = trimTextMiddle(!middTextNode ? (textContentFn(node) || '') : (middTextNodeNewText || middTextNode.data));
 
                   if (textMiddle) {
 
-                    const [textPrevTr, textPrev] = trimTextEnd(!prevTextNode ? (prevNode ? prevNode.textContent : '') : (prevTextNodeNewText || prevTextNode.data));
-                    const [textNext, textNextTr] = trimTextStart(!nextTextNode ? (nextNode ? nextNode.textContent : '') : (nextTextNodeNewText || nextTextNode.data));
+                    const [textPrevTr, textPrev] = trimTextEnd(!prevTextNode ? (textContentFn(prevNode) || '') : (prevTextNodeNewText || prevTextNode.data));
+                    const [textNext, textNextTr] = trimTextStart(!nextTextNode ? (textContentFn(nextNode) || '') : (nextTextNodeNewText || nextTextNode.data));
 
                     const testRes = this.spacing(textPrev + textMiddle + textNext);
 
@@ -551,7 +572,7 @@ return /******/ (function(modules) { // webpackBootstrap
               class WebPangu {
                 constructor() {
                   // this.blockTags = ["DIV", "P", "H1", "H2", "H3", "H4", "H5", "H6"];
-                  this.ignoredTags = ["SCRIPT", "STYLE", "TEXTAREA", "PRE", "SVG", "CODE"];
+                  this.ignoredTags = new Set(["SCRIPT", "STYLE", "TEXTAREA", "PRE", "SVG", "CODE"]);
                   // this.presentationalTags = ["B", "CODE", "DEL", "EM", "I", "S", "STRONG", "KBD", "U", "INS"];
                   // this.spaceLikeTags = ["BR", "HR", "I", "IMG", "PANGU"];
                   // this.spaceSensitiveTags = ["A", "DEL", "PRE", "S", "STRIKE", "U"];
@@ -565,7 +586,7 @@ return /******/ (function(modules) { // webpackBootstrap
                   this.bodyXpath = xPathQuery;
                 }
                 isIgnored(node) {
-                  return node instanceof HTMLElement && (this.ignoredTags.includes(node.nodeName) || node.isContentEditable || node.getAttribute('g_editable') === 'true');
+                  return node instanceof HTMLElement && (this.ignoredTags.has(node.nodeName) || node.isContentEditable || node.getAttribute('g_editable') === 'true');
                 }
                 canIgnoreNode(node) {
                   while (node instanceof HTMLElement) {
@@ -576,7 +597,7 @@ return /******/ (function(modules) { // webpackBootstrap
                 }
                 isFirstTextChild(parentNode, targetNode) {
                   for (let childNode = parentNode.firstChild; childNode instanceof Node; childNode = childNode.nextSibling) {
-                    if (childNode.nodeType !== Node.COMMENT_NODE && childNode.textContent) {
+                    if (childNode.nodeType !== Node.COMMENT_NODE && (textContentFn(childNode) || '')) {
                       return childNode === targetNode;
                     }
                   }
@@ -584,7 +605,7 @@ return /******/ (function(modules) { // webpackBootstrap
                 }
                 isLastTextChild(parentNode, targetNode) {
                   for (let childNode = parentNode.lastChild; childNode instanceof Node; childNode = childNode.previousSibling) {
-                    if (childNode.nodeType !== Node.COMMENT_NODE && childNode.textContent) {
+                    if (childNode.nodeType !== Node.COMMENT_NODE && (textContentFn(childNode) || '')) {
                       return childNode === targetNode;
                     }
                   }
